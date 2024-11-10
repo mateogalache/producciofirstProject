@@ -19,17 +19,17 @@ public class DraggableObject : MonoBehaviour
         }
         else
         {
-            rb.isKinematic = true; // Configura inicialmente el Rigidbody2D como kinematic
+            rb.isKinematic = true; 
         }
     }
 
     public void StartDragging(Transform playerTransform)
     {
-        if (rb != null) // Verifica que rb esté asignado
+        if (rb != null) 
         {
             isDragging = true;
             player = playerTransform;
-            rb.isKinematic = false; // Cambia a dynamic cuando empieza a arrastrar
+            rb.isKinematic = false; 
         }
     }
 
@@ -39,7 +39,7 @@ public class DraggableObject : MonoBehaviour
         player = null;
         if (rb != null)
         {
-            rb.isKinematic = true; // Vuelve a kinematic cuando deja de arrastrar
+            rb.isKinematic = true; 
         }
     }
 

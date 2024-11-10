@@ -16,10 +16,10 @@ public class PlayerController : MonoBehaviour
     public LayerMask groundMask;
     float xInput;
 
-    // Variables para interacción con objetos
-    public float interactionRange = 3f; // Aumenta el rango de interacción aquí
+    
+    public float interactionRange = 3f;
     private DraggableObject draggableObject;
-    public LayerMask draggableLayer; // Asigna la capa Draggable en el Inspector
+    public LayerMask draggableLayer; 
 
     void Start()
     {
@@ -116,6 +116,6 @@ public class PlayerController : MonoBehaviour
             Gizmos.DrawWireCube(groundCheck.bounds.center, groundCheck.bounds.size);
         }
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, interactionRange); // Visualiza el rango de interacción
+        Gizmos.DrawWireSphere(transform.position, interactionRange); 
     }
 }
