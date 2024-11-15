@@ -6,7 +6,7 @@ public class FollowCamera : MonoBehaviour
 {
     // Referencia al GameObject que la cámara debe seguir
     public Transform target;
-    
+
     // Distancia de la cámara respecto al objetivo
     public Vector3 offset = new Vector3(0, 5, -10);
 
@@ -35,14 +35,14 @@ public class FollowCamera : MonoBehaviour
         // Solo sigue el objetivo si se ha asignado
         if (target != null)
         {
-            // Posición objetivo de la cámara con el offset aplicado
-            Vector3 targetPosition = target.position + offset;
-            
-            // Movimiento suave de la cámara hacia la posición objetivo
-            transform.position = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
+            // Mantener las posiciones actuales en Y y Z
+            Vector3 currentPosition = transform.position;
 
-            // Mantener la cámara mirando al objetivo
-            //transform.LookAt(target);
+            // Calcular la posición objetivo en X, manteniendo Y y Z sin cambios
+            float targetX = Mathf.Lerp(currentPosition.x, target.position.x + offset.x, followSpeed * Time.deltaTime);
+
+            // Actualizar la posición de la cámara
+            transform.position = new Vector3(targetX, currentPosition.y, currentPosition.z);
         }
     }
 }
