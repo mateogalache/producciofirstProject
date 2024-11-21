@@ -1514,6 +1514,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 124453516}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &390247921
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 390247922}
+  m_Layer: 6
+  m_Name: PositionDraggableObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &390247922
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 390247921}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.4, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1094900238}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &429278079
 GameObject:
   m_ObjectHideFlags: 0
@@ -9269,6 +9300,7 @@ Transform:
   m_Children:
   - {fileID: 746771829}
   - {fileID: 642522388}
+  - {fileID: 390247922}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1094900239
@@ -9280,21 +9312,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1094900234}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 557a0d9e091aff747abe485555a78005, type: 3}
+  m_Script: {fileID: 11500000, guid: f61c64124c8575748994f087b9dc1b8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acceleration: 2
-  groundSpeed: 25.88
-  jumpSpeed: 15
-  groundDecay: 0.726
-  body: {fileID: 1094900235}
-  grounded: 0
-  groundCheck: {fileID: 642522389}
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 128
-  interactionRange: 4
-  draggableLayer:
+  _stats: {fileID: 11400000, guid: 05e6a06c5af93134ab98ff12e2c27265, type: 2}
+  _objectHoldPosition: {fileID: 390247922}
+  _grabbableLayer:
     serializedVersion: 2
     m_Bits: 256
 --- !u!212 &1094900240
