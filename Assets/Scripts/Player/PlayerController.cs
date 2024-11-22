@@ -1,14 +1,13 @@
 using System;
 using UnityEngine;
 
-namespace TarodevController
-{
+
+
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class PlayerController : MonoBehaviour, IPlayerController
     {
         [SerializeField] private ScriptableStats _stats;
-        [SerializeField] private Transform _objectHoldPosition; // Posición donde se sostendrán los objetos
-        [SerializeField] private LayerMask _grabbableLayer; // Capa de objetos agarrables
+     
         private Rigidbody2D _rb;
         private CapsuleCollider2D _col;
         private FrameInput _frameInput;
@@ -16,7 +15,7 @@ namespace TarodevController
         private bool _cachedQueryStartInColliders;
 
         private bool _doubleJumpAvailable; // Para manejar el doble salto
-        private GameObject _heldObject; // Referencia al objeto agarrado
+      
 
         #region Interface
 
@@ -40,15 +39,6 @@ namespace TarodevController
         {
             _time += Time.deltaTime;
             GatherInput();
-
-            // Manejar el agarre de objetos
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                if (_heldObject == null)
-                    TryGrabObject();
-                else
-                    DropObject();
-            }
         }
 
         private void GatherInput()
@@ -163,28 +153,6 @@ namespace TarodevController
 
         #region Object Handling
 
-        private void TryGrabObject()
-        {
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right, 1f, _grabbableLayer);
-            if (hit.collider != null)
-            {
-                _heldObject = hit.collider.gameObject;
-                _heldObject.transform.SetParent(_objectHoldPosition);
-                _heldObject.transform.localPosition = Vector3.zero;
-                _heldObject.GetComponent<Rigidbody2D>().isKinematic = true;
-            }
-        }
-
-        private void DropObject()
-        {
-            if (_heldObject != null)
-            {
-                _heldObject.GetComponent<Rigidbody2D>().isKinematic = false;
-                _heldObject.transform.SetParent(null);
-                _heldObject = null;
-            }
-        }
-
         #endregion
 
         #region Horizontal
@@ -246,4 +214,4 @@ namespace TarodevController
         public event Action Jumped;
         public Vector2 FrameInput { get; }
     }
-}
+
