@@ -13,7 +13,7 @@ public abstract class PickUpController : MonoBehaviour
     {
         if (alreadyPicked) return;
 
-        PlayerController player =  collision.GetComponent<PlayerController>();
+        PlayerMovement player =  collision.GetComponent<PlayerMovement>();
         if (player != null)
         {
             PickUp();
