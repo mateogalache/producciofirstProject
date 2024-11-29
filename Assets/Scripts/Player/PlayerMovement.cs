@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private float horizontal;
-    private float speed = 10f;
-    private float jumpingPower = 20f;
+    public float horizontal;
+    public float speed = 10f;
+    public float jumpingPower = 20f;
     private bool isFacingRight = true;
     private bool doubleJump;
 
