@@ -12,8 +12,19 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundLayer;
 
+    private float coyoteTime = 0.2f;
+    private float coyoteTimeCounter;
+
     void Update()
     {
+        if(IsGrounded())
+        {
+            coyoteTimeCounter = coyoteTime;
+        }
+        else
+        {
+            coyoteTimeCounter -= Time.deltaTime;
+        }
         horizontal = Input.GetAxisRaw("Horizontal");
 
         if(IsGrounded() && !Input.GetButton("Jump"))
@@ -23,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetButtonDown("Jump"))
         {
-            if(IsGrounded() || doubleJump)
+            if(coyoteTimeCounter > 0f || doubleJump)
             {
                 rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
                 doubleJump = !doubleJump;
@@ -34,6 +45,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)
         {
             rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+            coyoteTimeCounter = 0f;
         }
 
         Flip();
