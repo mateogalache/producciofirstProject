@@ -4,8 +4,7 @@ using UnityEngine;
 
 public abstract class PickUpController : MonoBehaviour
 {
-
-    protected abstract void PickUp();
+    protected abstract void PickUp(PlayerMovement player);
 
     private bool alreadyPicked = false;
 
@@ -13,11 +12,11 @@ public abstract class PickUpController : MonoBehaviour
     {
         if (alreadyPicked) return;
 
-        PlayerMovement player =  collision.GetComponent<PlayerMovement>();
+        PlayerMovement player = collision.GetComponent<PlayerMovement>();
         if (player != null)
         {
-            PickUp();
+            PickUp(player);
             alreadyPicked = true;
-        }        
+        }
     }
 }

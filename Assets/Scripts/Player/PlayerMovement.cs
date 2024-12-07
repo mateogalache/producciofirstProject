@@ -15,9 +15,22 @@ public class PlayerMovement : MonoBehaviour
     private float coyoteTime = 0.2f;
     private float coyoteTimeCounter;
 
+    // Referencia al PlayerAudio
+    private PlayerAudio playerAudio;
+
+    void Start()
+    {
+        // Obtener la referencia al PlayerAudio
+        playerAudio = GetComponent<PlayerAudio>();
+        if (playerAudio == null)
+        {
+            Debug.LogWarning("PlayerAudio no está adjunto al jugador.");
+        }
+    }
+
     void Update()
     {
-        if(IsGrounded())
+        if (IsGrounded())
         {
             coyoteTimeCounter = coyoteTime;
         }
@@ -25,21 +38,27 @@ public class PlayerMovement : MonoBehaviour
         {
             coyoteTimeCounter -= Time.deltaTime;
         }
+
         horizontal = Input.GetAxisRaw("Horizontal");
 
-        if(IsGrounded() && !Input.GetButton("Jump"))
+        if (IsGrounded() && !Input.GetButton("Jump"))
         {
-            doubleJump =false;
+            doubleJump = false;
         }
 
         if (Input.GetButtonDown("Jump"))
         {
-            if(coyoteTimeCounter > 0f || doubleJump)
+            if (coyoteTimeCounter > 0f || doubleJump)
             {
                 rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
                 doubleJump = !doubleJump;
+
+                // Reproducir el sonido de salto
+                if (playerAudio != null)
+                {
+                    playerAudio.PlayJumpSound();
+                }
             }
-            
         }
 
         if (Input.GetButtonUp("Jump") && rb.velocity.y > 0f)
