@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PieceController : PickUpController
@@ -15,6 +13,17 @@ public class PieceController : PickUpController
         else
         {
             Debug.LogWarning("PlayerAudio no encontrado en el jugador.");
+        }
+
+        // Actualizar el contador de estrellas en la UI
+        if (StarUIManager.Instance != null)
+        {
+            Vector3 starWorldPosition = transform.position;
+            StarUIManager.Instance.AddStar(starWorldPosition);
+        }
+        else
+        {
+            Debug.LogWarning("StarUIManager no está presente en la escena.");
         }
 
         // Desactivar la estrella
