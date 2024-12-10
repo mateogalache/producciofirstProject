@@ -5,8 +5,10 @@ public class PlayerMovement : MonoBehaviour
     public float horizontal;
     public float speed = 10f;
     public float jumpingPower = 20f;
-    private bool isFacingRight = true;
-    private bool doubleJump;
+    public bool isFacingRight = true;
+    public bool doubleJump;
+
+    public float gravity = 1f;
 
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
@@ -15,16 +17,14 @@ public class PlayerMovement : MonoBehaviour
     private float coyoteTime = 0.2f;
     private float coyoteTimeCounter;
 
-    // Referencia al PlayerAudio
     private PlayerAudio playerAudio;
 
     void Start()
     {
-        // Obtener la referencia al PlayerAudio
         playerAudio = GetComponent<PlayerAudio>();
         if (playerAudio == null)
         {
-            Debug.LogWarning("PlayerAudio no est· adjunto al jugador.");
+            Debug.LogWarning("PlayerAudio no est√° adjunto al jugador.");
         }
     }
 
@@ -73,6 +73,7 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         rb.velocity = new Vector2(horizontal * speed, rb.velocity.y);
+        rb.velocity += Vector2.down * gravity * Time.fixedDeltaTime;
     }
 
     private bool IsGrounded()
