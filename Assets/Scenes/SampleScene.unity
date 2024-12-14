@@ -17192,6 +17192,10 @@ PrefabInstance:
       propertyPath: gravity
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 918266069729297346, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
+      propertyPath: groundLayer.m_Bits
+      value: 384
+      objectReference: {fileID: 0}
     - target: {fileID: 3183146814025092046, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
       propertyPath: m_Material
       value: 
@@ -17202,11 +17206,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6252060457604224271, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -65.8
+      value: 514.16
       objectReference: {fileID: 0}
     - target: {fileID: 6252060457604224271, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -16.7
+      value: 34
       objectReference: {fileID: 0}
     - target: {fileID: 6252060457604224271, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
       propertyPath: m_LocalPosition.z

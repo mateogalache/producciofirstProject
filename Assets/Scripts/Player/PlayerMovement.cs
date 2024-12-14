@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float gravityScale = 2f;
     [SerializeField] private float groundCheckRadius = 0.2f;
     [SerializeField] private Transform groundCheck;
-    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private LayerMask groundLayer; // Ensure this includes both "Ground" and "Draggable"
 
     [Header("Jump Settings")]
     [SerializeField] private float coyoteTime = 0.2f;
@@ -25,7 +25,10 @@ public class PlayerMovement : MonoBehaviour
 
     private Rigidbody2D rb;
     private PlayerAudio playerAudio;
-    
+    private Animator animator;
+
+    // Reference to the grabbed object
+    private DraggableObject grabbedObject;
 
     void Awake()
     {
@@ -33,7 +36,7 @@ public class PlayerMovement : MonoBehaviour
         rb.gravityScale = gravityScale;
 
         playerAudio = GetComponent<PlayerAudio>();
-        
+        animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -42,7 +45,7 @@ public class PlayerMovement : MonoBehaviour
         HandleCoyoteTime();
         HandleJumpBuffer();
         FlipCharacter();
-        
+        UpdateAnimations();
     }
 
     void FixedUpdate()
@@ -80,22 +83,37 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleJumpBuffer()
     {
-        if (jumpBufferCounter > 0f && coyoteTimeCounter > 0f)
+        if (jumpBufferCounter > 0f)
         {
-            Jump();
-            jumpBufferCounter = 0f;
-        }
-        else if (jumpBufferCounter > 0f && canDoubleJump)
-        {
-            Jump();
-            canDoubleJump = false;
-            jumpBufferCounter = 0f;
+            if (coyoteTimeCounter > 0f || canDoubleJump)
+            {
+                Jump();
+                jumpBufferCounter = 0f;
+
+                if (canDoubleJump && !IsGrounded())
+                {
+                    canDoubleJump = false;
+                }
+            }
         }
     }
 
     private void Jump()
     {
-        rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+        float finalJumpForce = jumpForce;
+
+        if (grabbedObject != null)
+        {
+            // Optionally adjust jump force based on box weight
+            Rigidbody2D boxRb = grabbedObject.GetComponent<Rigidbody2D>();
+            if (boxRb != null)
+            {
+                // Example: Reduce jump force based on the mass of the box
+                finalJumpForce = jumpForce / (1 + boxRb.mass);
+            }
+        }
+
+        rb.velocity = new Vector2(rb.velocity.x, finalJumpForce);
         playerAudio?.PlayJumpSound();
     }
 
@@ -106,7 +124,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void ApplyCustomGravity()
     {
-        // Enhanced gravity for better jump feel
         if (rb.velocity.y < 0)
         {
             rb.velocity += Vector2.up * Physics2D.gravity.y * (gravityScale * 2) * Time.fixedDeltaTime;
@@ -133,7 +150,27 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-   
+    private void UpdateAnimations()
+    {
+        if (animator != null)
+        {
+            animator.SetFloat("Speed", Mathf.Abs(horizontalInput));
+            animator.SetBool("IsGrounded", IsGrounded());
+            animator.SetFloat("VerticalVelocity", rb.velocity.y);
+            animator.SetBool("IsCarrying", grabbedObject != null);
+        }
+    }
+
+    // Public methods to set and unset the grabbed object
+    public void SetGrabbedObject(DraggableObject obj)
+    {
+        grabbedObject = obj;
+    }
+
+    public void UnsetGrabbedObject()
+    {
+        grabbedObject = null;
+    }
 
     // Optional: Visualize ground check radius in the editor
     private void OnDrawGizmosSelected()
@@ -143,5 +180,11 @@ public class PlayerMovement : MonoBehaviour
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
+    }
+
+    // Public method to check facing direction
+    public bool IsFacingRight()
+    {
+        return isFacingRight;
     }
 }
