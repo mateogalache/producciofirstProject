@@ -18,7 +18,7 @@ public class Checkpoint : MonoBehaviour
                 isActivated = true;
 
                 // Opcional: Añadir feedback visual o auditivo aquí
-                //ActivateCheckpointVisual();
+                ActivateCheckpointVisual();
             }
             else
             {
