@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class StarUIManager : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class StarUIManager : MonoBehaviour
 
     private AudioSource audioSource;
     private int starCount = 0;
+    private int maxStars = 14; // Número máximo de estrellas para terminar el juego
 
     void Awake()
     {
@@ -67,6 +69,12 @@ public class StarUIManager : MonoBehaviour
             audioSource.PlayOneShot(collectSound);
         else
             Debug.LogWarning("No se ha asignado un clip de sonido de recolección en StarUIManager.");
+
+        // Verificar si se ha alcanzado el número máximo de estrellas
+        if (starCount >= maxStars)
+        {
+            EndGame();
+        }
     }
 
     /// <summary>
@@ -82,5 +90,14 @@ public class StarUIManager : MonoBehaviour
         {
             Debug.LogWarning("Star Container o Star UI Prefab no están asignados en StarUIManager.");
         }
+    }
+
+    /// <summary>
+    /// Finaliza el juego cuando se recolectan todas las estrellas.
+    /// </summary>
+    private void EndGame()
+    {
+        Debug.Log("¡Juego terminado! Todas las estrellas han sido recolectadas.");
+        SceneManager.LoadScene("MainMenu");
     }
 }
