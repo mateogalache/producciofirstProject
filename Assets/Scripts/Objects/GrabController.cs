@@ -1,46 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DraggableObject : MonoBehaviour
 {
-    [SerializeField] private Transform grabPoint;
-    [SerializeField] private Transform rayPoint;
-    [SerializeField] private float rayDistance;
-    private GameObject grabbedObject;
-    private int layerIndex;
+    private Rigidbody2D rb;
+    private Transform originalParent;
 
-    private void Start()
+    void Awake()
     {
-        layerIndex = LayerMask.NameToLayer("Draggable");
+        rb = GetComponent<Rigidbody2D>();
     }
 
-    private void Update()
+    /// <summary>
+    /// Called by the player when grabbing this object.
+    /// </summary>
+    /// <param name="newParent">The transform (usually the player's grab point) to attach to.</param>
+    public void Grab(Transform newParent)
     {
-        RaycastHit2D hitInfo = Physics2D.Raycast(rayPoint.position, transform.right, rayDistance);
+        // Save the original parent in case you need to restore it
+        originalParent = transform.parent;
+        transform.SetParent(newParent);
+        transform.localPosition = Vector3.zero; // Snap the object to the grab point
+        rb.isKinematic = true; // Disable physics while being carried
+    }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            if (hitInfo.collider != null && hitInfo.collider.gameObject.layer == layerIndex && grabbedObject == null)
-            {
-                // Grab the object
-                grabbedObject = hitInfo.collider.gameObject;
-                grabbedObject.GetComponent<Rigidbody2D>().isKinematic = true;
-                grabbedObject.transform.SetParent(transform); // Attach the box to the player
-            }
-        }
-
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            if (grabbedObject != null)
-            {
-                // Release the object
-                grabbedObject.GetComponent<Rigidbody2D>().isKinematic = false;
-                grabbedObject.transform.SetParent(null); // Detach the box from the player
-                grabbedObject = null;
-            }
-        }
-
-        Debug.DrawRay(rayPoint.position, transform.right * rayDistance, Color.red);
+    /// <summary>
+    /// Called by the player when releasing this object.
+    /// </summary>
+    public void Release()
+    {
+        transform.SetParent(originalParent);
+        rb.isKinematic = false; // Re-enable physics
     }
 }

@@ -1,34 +1,50 @@
+﻿
+using System.Collections;
 using UnityEngine;
 
+
 [RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(PlayerAudio))]
+[RequireComponent(typeof(PlayerAudio))] // Ensure you have a PlayerAudio script (or remove if unused)
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement Settings")]
-    [SerializeField] private float speed = 10f;
+    [SerializeField] private float moveSpeed = 10f;
+    [SerializeField] private float accelerationTime = 0.1f;   // Time to reach full speed when input is given
+    [SerializeField] private float decelerationTime = 0.05f;    // Time to slow down when input is released
     [SerializeField] private float jumpForce = 20f;
     [SerializeField] private float gravityScale = 2f;
-    [SerializeField] private float groundCheckRadius = 0.2f;
     [SerializeField] private Transform groundCheck;
-    [SerializeField] private LayerMask groundLayer; // Ensure this includes both "Ground" and "Draggable"
+    [SerializeField] private float groundCheckRadius = 0.2f;
+    [SerializeField] private LayerMask groundLayer; // Assign the layer(s) that count as ground
 
     [Header("Jump Settings")]
-    [SerializeField] private float coyoteTime = 0.2f;
-    [SerializeField] private float jumpBufferTime = 0.2f;
+    [SerializeField] private float coyoteTime = 0.2f;       // Allows jump shortly after leaving ground
+    [SerializeField] private float jumpBufferTime = 0.2f;   // Buffers jump input before landing
+    [Header("Carry Settings")]
+    [SerializeField] private float jumpCarryMultiplier = 0.8f; // Adjust this value to control jump height when carrying an object
+
+
+    [Header("Drag Settings")]
+    [SerializeField] private Transform grabPoint;         // Child transform where the object will attach
+    [SerializeField] private float grabRadius = 1f;         // Detection radius for draggable objects
+    [SerializeField] private LayerMask draggableLayer;      // Should be set to the "Draggable" layer
+
+    private Rigidbody2D rb;
+    private PlayerAudio playerAudio;
+    private Animator animator; // Optional – if you use animations
 
     private float horizontalInput;
-    private float coyoteTimeCounter;
-    private float jumpBufferCounter;
+    private float coyoteTimer;
+    private float jumpBufferTimer;
+    private float velocityXSmoothing;
 
     private bool isFacingRight = true;
     private bool canDoubleJump;
 
-    private Rigidbody2D rb;
-    private PlayerAudio playerAudio;
-    private Animator animator;
-
-    // Reference to the grabbed object
+    // Reference to the currently grabbed object (if any)
     private DraggableObject grabbedObject;
+
+    private Collider2D playerCollider;
 
     void Awake()
     {
@@ -36,15 +52,20 @@ public class PlayerMovement : MonoBehaviour
         rb.gravityScale = gravityScale;
 
         playerAudio = GetComponent<PlayerAudio>();
-        animator = GetComponent<Animator>();
+        
+
+        // Get the player's own Collider2D.
+        playerCollider = GetComponent<Collider2D>();
     }
+
 
     void Update()
     {
-        HandleInput();
-        HandleCoyoteTime();
+        GetInput();
         HandleJumpBuffer();
-        FlipCharacter();
+        UpdateCoyoteTimer();
+        HandleGrabInput();
+        HandleFlip();
         UpdateAnimations();
     }
 
@@ -54,102 +75,135 @@ public class PlayerMovement : MonoBehaviour
         ApplyCustomGravity();
     }
 
-    private void HandleInput()
+    #region Input & Movement
+
+    /// <summary>
+    /// Reads horizontal and jump input.
+    /// </summary>
+    private void GetInput()
     {
         horizontalInput = Input.GetAxisRaw("Horizontal");
 
         if (Input.GetButtonDown("Jump"))
         {
-            jumpBufferCounter = jumpBufferTime;
+            jumpBufferTimer = jumpBufferTime;
         }
         else
         {
-            jumpBufferCounter -= Time.deltaTime;
+            jumpBufferTimer -= Time.deltaTime;
         }
     }
 
-    private void HandleCoyoteTime()
+    /// <summary>
+    /// Updates the coyote timer which allows a jump shortly after leaving the ground.
+    /// </summary>
+    private void UpdateCoyoteTimer()
     {
         if (IsGrounded())
         {
-            coyoteTimeCounter = coyoteTime;
-            canDoubleJump = true; // Reset double jump when grounded
+            coyoteTimer = coyoteTime;
+            canDoubleJump = true;
         }
         else
         {
-            coyoteTimeCounter -= Time.deltaTime;
+            coyoteTimer -= Time.deltaTime;
         }
     }
 
+    /// <summary>
+    /// Checks if a jump input was buffered and if conditions allow a jump.
+    /// </summary>
     private void HandleJumpBuffer()
     {
-        if (jumpBufferCounter > 0f)
+        if (jumpBufferTimer > 0f)
         {
-            if (coyoteTimeCounter > 0f || canDoubleJump)
+            if (coyoteTimer > 0f || canDoubleJump)
             {
                 Jump();
-                jumpBufferCounter = 0f;
+                jumpBufferTimer = 0f;
 
-                if (canDoubleJump && !IsGrounded())
-                {
+                if (!IsGrounded() && canDoubleJump)
                     canDoubleJump = false;
-                }
             }
         }
     }
 
+    /// <summary>
+    /// Executes a jump. If a draggable object is held, the jump force is reduced based on its mass.
+    /// </summary>
     private void Jump()
     {
         float finalJumpForce = jumpForce;
 
+        // If an object is grabbed, apply the carry multiplier so the jump is slightly reduced.
         if (grabbedObject != null)
         {
-            // Optionally adjust jump force based on box weight
-            Rigidbody2D boxRb = grabbedObject.GetComponent<Rigidbody2D>();
-            if (boxRb != null)
-            {
-                // Example: Reduce jump force based on the mass of the box
-                finalJumpForce = jumpForce / (1 + boxRb.mass);
-            }
+            finalJumpForce = jumpForce * jumpCarryMultiplier;
         }
 
         rb.velocity = new Vector2(rb.velocity.x, finalJumpForce);
         playerAudio?.PlayJumpSound();
     }
 
+
+    /// <summary>
+    /// Handles horizontal movement using SmoothDamp for more refined acceleration and deceleration.
+    /// </summary>
     private void Move()
     {
-        rb.velocity = new Vector2(horizontalInput * speed, rb.velocity.y);
+        // If carrying an object, reduce speed slightly.
+        float currentSpeed = (grabbedObject != null) ? moveSpeed * 0.7f : moveSpeed;
+        float targetSpeed = horizontalInput * currentSpeed;
+
+        // Use a faster smoothing time when no input is provided (deceleration)
+        float smoothTime = Mathf.Abs(horizontalInput) > 0.01f ? accelerationTime : decelerationTime;
+        float newVelocityX = Mathf.SmoothDamp(rb.velocity.x, targetSpeed, ref velocityXSmoothing, smoothTime);
+        rb.velocity = new Vector2(newVelocityX, rb.velocity.y);
     }
 
+    /// <summary>
+    /// Applies a custom gravity multiplier for better jump control.
+    /// </summary>
     private void ApplyCustomGravity()
     {
         if (rb.velocity.y < 0)
         {
-            rb.velocity += Vector2.up * Physics2D.gravity.y * (gravityScale * 2) * Time.fixedDeltaTime;
+            // Increase downward force when falling
+            rb.velocity += Vector2.up * Physics2D.gravity.y * (gravityScale * 2 - 1) * Time.fixedDeltaTime;
         }
         else if (rb.velocity.y > 0 && !Input.GetButton("Jump"))
         {
+            // Cut jump height when the jump button is released early
             rb.velocity += Vector2.up * Physics2D.gravity.y * gravityScale * Time.fixedDeltaTime;
         }
     }
 
+    /// <summary>
+    /// Checks if the player is on the ground.
+    /// </summary>
     private bool IsGrounded()
     {
         return Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
     }
 
-    private void FlipCharacter()
+    /// <summary>
+    /// Flips the character's facing direction based on movement.
+    /// </summary>
+    private void HandleFlip()
     {
-        if (horizontalInput > 0 && !isFacingRight || horizontalInput < 0 && isFacingRight)
+        if ((horizontalInput > 0 && !isFacingRight) ||
+            (horizontalInput < 0 && isFacingRight))
         {
             isFacingRight = !isFacingRight;
-            Vector3 localScale = transform.localScale;
-            localScale.x *= -1f;
-            transform.localScale = localScale;
+            Vector3 scale = transform.localScale;
+            scale.x *= -1;
+            transform.localScale = scale;
         }
     }
 
+    /// <summary>
+    /// Updates animator parameters (if you use an Animator).
+    /// </summary>
     private void UpdateAnimations()
     {
         if (animator != null)
@@ -161,30 +215,133 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    // Public methods to set and unset the grabbed object
-    public void SetGrabbedObject(DraggableObject obj)
+    #endregion
+
+    #region Dragging
+
+    /// <summary>
+    /// Checks input for grabbing or releasing a draggable object.
+    /// </summary>
+    private void HandleGrabInput()
     {
-        grabbedObject = obj;
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            if (grabbedObject == null)
+            {
+                TryGrab();
+            }
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            if (grabbedObject != null)
+            {
+                ReleaseGrab();
+            }
+        }
     }
 
-    public void UnsetGrabbedObject()
+    private void TryGrab()
     {
-        grabbedObject = null;
+        if (grabPoint == null)
+        {
+            Debug.LogWarning("GrabPoint is not assigned on the player.");
+            return;
+        }
+
+        Debug.Log("Attempting to grab object. GrabPoint position: " + grabPoint.position + " | GrabRadius: " + grabRadius);
+
+        // Use OverlapCircleAll to check for colliders on the draggable layer.
+        Collider2D[] hits = Physics2D.OverlapCircleAll(grabPoint.position, grabRadius, draggableLayer);
+
+        if (hits.Length == 0)
+        {
+            Debug.Log("No colliders found in grab radius.");
+            return;
+        }
+
+        Debug.Log("Found " + hits.Length + " collider(s) in grab range.");
+
+        foreach (Collider2D col in hits)
+        {
+            // Use GetComponentInParent to search up the hierarchy for the DraggableObject script.
+            DraggableObject dObj = col.GetComponentInParent<DraggableObject>();
+            if (dObj != null)
+            {
+                grabbedObject = dObj;
+                Debug.Log("Grabbing object: " + dObj.gameObject.name);
+                grabbedObject.Grab(grabPoint);
+
+                // Disable collisions between the player and the grabbed object.
+                Collider2D boxCollider = grabbedObject.GetComponent<Collider2D>();
+                if (playerCollider != null && boxCollider != null)
+                {
+                    Physics2D.IgnoreCollision(playerCollider, boxCollider, true);
+                    Debug.Log("Ignoring collisions between player and " + grabbedObject.gameObject.name);
+                }
+                return;
+            }
+            else
+            {
+                Debug.Log("Collider " + col.name + " does not have a DraggableObject component in its parent hierarchy.");
+            }
+        }
+
+        Debug.Log("No draggable object found among colliders.");
     }
 
-    // Optional: Visualize ground check radius in the editor
-    private void OnDrawGizmosSelected()
+
+
+
+    /// <summary>
+    /// Releases the currently held draggable object.
+    /// </summary>
+    private void ReleaseGrab()
+    {
+        if (grabbedObject != null)
+        {
+            Collider2D boxCollider = grabbedObject.GetComponent<Collider2D>();
+            if (playerCollider != null && boxCollider != null)
+            {
+                // Start a coroutine to re‑enable collisions after a short delay.
+                StartCoroutine(ReenableCollisionAfterDelay(playerCollider, boxCollider));
+            }
+            grabbedObject.Release();
+            grabbedObject = null;
+        }
+    }
+
+
+    #endregion
+
+    #region Gizmos
+
+    void OnDrawGizmosSelected()
     {
         if (groundCheck != null)
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
+        if (grabPoint != null)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(grabPoint.position, grabRadius);
+        }
     }
 
-    // Public method to check facing direction
-    public bool IsFacingRight()
+    #endregion
+
+    // Optional: Expose the facing direction if needed by other scripts.
+    public bool IsFacingRight() => isFacingRight;
+
+    private IEnumerator ReenableCollisionAfterDelay(Collider2D playerCol, Collider2D boxCol)
     {
-        return isFacingRight;
+        // Wait until the next physics update.
+        yield return new WaitForFixedUpdate();
+
+        // Re‑enable collisions between the player and the box.
+        Physics2D.IgnoreCollision(playerCol, boxCol, false);
+        Debug.Log("Restored collisions between player and " + boxCol.gameObject.name);
     }
+
 }
