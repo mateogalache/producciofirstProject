@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic; //
 
 public class StarUIManager : MonoBehaviour
 {
@@ -20,8 +21,13 @@ public class StarUIManager : MonoBehaviour
     public AudioClip collectSound;
 
     private AudioSource audioSource;
-    private int starCount = 0;
+    private int starCount = 0; //contador de estrellas recolectadas
     private int maxStars = 14; // Número máximo de estrellas para terminar el juego
+
+    private List<GameObject> collectedStars = new List<GameObject>(); //Lista que almacena las estrellas recolectadas
+    private Vector3[] targetPositions; //posiciones finales para formar la palabra ANDY
+    private bool animateStars = false; //booleano que indica si la animació se activa
+
 
     void Awake()
     {
@@ -42,10 +48,13 @@ public class StarUIManager : MonoBehaviour
     {
         // Obtener o añadir un AudioSource para reproducir sonidos
         audioSource = GetComponent<AudioSource>();
+
         if (audioSource == null)
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
+        targetPositions = GetTargetPositionsForAndy(); // Guardamos las posiciones finales de la animación
+
 
         // Verificar asignaciones
         if (starContainer == null)
@@ -64,6 +73,9 @@ public class StarUIManager : MonoBehaviour
         starCount++;
         UpdateStarUI();
 
+        //GameObject newStar = Instantiate(starUIPrefab, starContainer);
+        //collectedStars.Add(newStar);
+
         // Reproducir sonido de recolección
         if (collectSound != null)
             audioSource.PlayOneShot(collectSound);
@@ -73,7 +85,8 @@ public class StarUIManager : MonoBehaviour
         // Verificar si se ha alcanzado el número máximo de estrellas
         if (starCount >= maxStars)
         {
-            EndGame();
+            /*EndGame();*/
+            animateStars = true; // Activar la animación en el Update
         }
     }
 
@@ -84,7 +97,9 @@ public class StarUIManager : MonoBehaviour
     {
         if (starContainer != null && starUIPrefab != null)
         {
-            Instantiate(starUIPrefab, starContainer);
+            GameObject newStar = Instantiate(starUIPrefab, starContainer);
+            collectedStars.Add(newStar);
+            //Instantiate(starUIPrefab, starContainer);
         }
         else
         {
@@ -92,6 +107,57 @@ public class StarUIManager : MonoBehaviour
         }
     }
 
+    void Update() 
+    {
+        if (animateStars)
+        {
+            MoveStarsToFormName();
+        }
+    }
+
+    private void MoveStarsToFormName()
+    {
+        //bucle per recorrer totes les estrelles i mou cadascuna fins destí
+        for (int i = 0; i < collectedStars.Count && i < targetPositions.Length; i++)
+        {
+            GameObject star = collectedStars[i];
+            Vector3 targetPos = targetPositions[i];
+
+            float step = 200f * Time.deltaTime;
+            star.transform.position = Vector3.MoveTowards(star.transform.position, targetPos, step);
+        }
+
+        //verifiquem si totes les estrelles han arribat a la posicio
+        bool allStarsArrived = true;
+        for (int i = 0; i < collectedStars.Count && i < targetPositions.Length; i++)
+        {
+            if (collectedStars[i].transform.position != targetPositions[i])
+            {
+                allStarsArrived = false;
+                break;
+            }
+        }
+
+        if (allStarsArrived)
+        {
+            animateStars = false;
+            Debug.Log("Animación final completada.");
+        }
+    }
+
+    //defineix totes les posicions in cada estrella ha de moure's per formar la paraula
+    private Vector3[] GetTargetPositionsForAndy()
+    {
+        return new Vector3[]
+        {
+            new Vector3(-100, 50, 0), new Vector3(-90, 70, 0), new Vector3(-80, 50, 0), // "A"
+            new Vector3(-60, 70, 0), new Vector3(-60, 50, 0),                           // "N"
+            new Vector3(-30, 60, 0), new Vector3(-20, 50, 0), new Vector3(-10, 60, 0),  // "D"
+            new Vector3(10, 70, 0), new Vector3(15, 50, 0), new Vector3(20, 70, 0),    // "Y"
+        };
+    }
+
+    /*
     /// <summary>
     /// Finaliza el juego cuando se recolectan todas las estrellas.
     /// </summary>
@@ -100,4 +166,5 @@ public class StarUIManager : MonoBehaviour
         Debug.Log("¡Juego terminado! Todas las estrellas han sido recolectadas.");
         SceneManager.LoadScene("MainMenu");
     }
+    */
 }
