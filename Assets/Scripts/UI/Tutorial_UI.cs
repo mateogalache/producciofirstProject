@@ -9,7 +9,7 @@ public class TutorialUI : MonoBehaviour
     public RectTransform cogerObjetosPanel;
     public RectTransform estrellasPanel;
     public RectTransform runPanel;
-    public Canvas canvas;
+    //public Canvas canvas;
 
     private Vector2 posicionInicialTutorial;
     private Vector2 posicionInicialCogerObjetos;
@@ -18,9 +18,9 @@ public class TutorialUI : MonoBehaviour
 
     private float velocidad = 2f;  // velocitat de moviment
     private float amplitud = 10f;  // Ajusta què tant es mou de dalt a baix
-    private float DisappearTime = 10f;
-    private float estrellasVisibleTime = -1f;
-    private float runVisibleTime = -1f;
+    //private float DisappearTime = 10f;
+    //private float estrellasVisibleTime = -1f;
+    //private float runVisibleTime = -1f;
 
     void Start()
     {
@@ -67,55 +67,6 @@ public class TutorialUI : MonoBehaviour
             cogerObjetosPanel.gameObject.SetActive(false);
         }
 
-        /*
-        CheckPanelVisibility(estrellasPanel, ref estrellasVisibleTime);
-
-        CheckPanelVisibility(runPanel, ref runVisibleTime);
-
-        //Comparem el temps actual Time.time amb el moment en el panell va ser vist
-        if (estrellasVisibleTime > 0 && Time.time - estrellasVisibleTime > DisappearTime)
-        {
-            estrellasPanel.gameObject.SetActive(false);
-            estrellasVisibleTime = -1f;
-        }
-
-        if (runVisibleTime > 0 && Time.time - runVisibleTime > DisappearTime)
-        {
-            runPanel.gameObject.SetActive(false);
-            runVisibleTime = -1f;
-        }
-        */
-
     }
-
-    /*
-     *  void CheckPanelVisibility(RectTransform panel, ref float visibleTime)
-    {
-        if (panel.gameObject.activeSelf && visibleTime < 0)
-        {
-            Vector3[] corners = new Vector3[4];
-            panel.GetWorldCorners(corners);
-            RectTransform canvasRect = canvas.GetComponent<RectTransform>();
-
-            bool isVisible = false;
-            foreach (Vector3 corner in corners)
-            {
-                if (RectTransformUtility.RectangleContainsScreenPoint(canvasRect, corner, Camera.main))
-                {
-                    isVisible = true;
-                    break;
-                }
-            }
-
-            if (isVisible)
-            {
-                visibleTime = Time.time;
-            }
-        }
-    }
-
-     
-     */
-
 
 }
