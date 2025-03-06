@@ -13098,7 +13098,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 10.056438
+  MinDistance: 14.44899
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 2
@@ -18829,7 +18829,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tutorialPanel: {fileID: 137463905}
-  cogerObjetosPanel: {fileID: 0}
+  cogerObjetosPanel: {fileID: 1087758740}
 --- !u!4 &1469971829
 Transform:
   m_ObjectHideFlags: 0

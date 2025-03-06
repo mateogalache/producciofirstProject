@@ -38,7 +38,8 @@ public class TutorialUI : MonoBehaviour
         float moviment = Mathf.Sin(Time.time * velocidad) * amplitud;
 
         //Movem panels
-        tutorialPanel.anchoredPosition = new Vector2(posicionInicialTutorial.x, posicionInicialTutorial.y + moviment);
+        Vector2 vector2 = new(posicionInicialTutorial.x, posicionInicialTutorial.y + moviment);
+        tutorialPanel.anchoredPosition = vector2;
         cogerObjetosPanel.anchoredPosition = new Vector2(posicionInicialCogerObjetos.x, posicionInicialCogerObjetos.y + moviment);
 
         if (Input.GetKeyDown(KeyCode.Space)) // Si pressionem espacio
