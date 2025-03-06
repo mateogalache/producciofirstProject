@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI; 
+using UnityEngine.UI;
+using TMPro;
 
 public class TutorialUI : MonoBehaviour
 {
@@ -9,7 +10,9 @@ public class TutorialUI : MonoBehaviour
     public RectTransform cogerObjetosPanel;
     public RectTransform estrellasPanel;
     public RectTransform runPanel;
-    //public Canvas canvas;
+
+    public GameObject checkpointPanel;
+    public TMP_Text checkpointText;
 
     private Vector2 posicionInicialTutorial;
     private Vector2 posicionInicialCogerObjetos;
@@ -18,13 +21,11 @@ public class TutorialUI : MonoBehaviour
 
     private float velocidad = 2f;  // velocitat de moviment
     private float amplitud = 10f;  // Ajusta què tant es mou de dalt a baix
-    //private float DisappearTime = 10f;
-    //private float estrellasVisibleTime = -1f;
-    //private float runVisibleTime = -1f;
+    
 
     void Start()
     {
-        if (tutorialPanel == null || cogerObjetosPanel == null)
+        if (tutorialPanel == null || cogerObjetosPanel == null || checkpointPanel == null || checkpointText == null)
         {
             Debug.LogError("TutorialUI: Paneles no asignados en el Inspector.");
             return;
@@ -40,6 +41,7 @@ public class TutorialUI : MonoBehaviour
         cogerObjetosPanel.gameObject.SetActive(true);
         estrellasPanel.gameObject.SetActive(true);
         runPanel.gameObject.SetActive(true);
+        checkpointPanel.SetActive(false);
 
     }
 
@@ -67,6 +69,19 @@ public class TutorialUI : MonoBehaviour
             cogerObjetosPanel.gameObject.SetActive(false);
         }
 
+    }
+
+    public void ShowMessage(string message)
+    {
+        if (checkpointText != null && checkpointPanel != null)
+        {
+            checkpointText.text = message;
+            checkpointPanel.SetActive(true);
+            Debug.Log("Mensaje mostrado en TutorialUI: " + message);
+        } else
+        {
+            Debug.LogError("checkpointText o checkpointPanel no están asignados en el Inspector.");
+        }
     }
 
 }

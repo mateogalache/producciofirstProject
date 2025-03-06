@@ -18,7 +18,9 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            Debug.LogWarning("GameManager ya existe. Se destruirá el duplicado.");
             Destroy(gameObject);
+            return; //
         }
     }
 
