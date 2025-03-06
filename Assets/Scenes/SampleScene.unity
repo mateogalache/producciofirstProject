@@ -13099,7 +13099,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 14.44899
-  MaxDistance: 500
+  MaxDistance: 31.175972
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -18828,7 +18828,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae080c493a1753444873b73e09015b2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tutorialPanel: {fileID: 137463905}
+  tutorialPanel: {fileID: 137463906}
   cogerObjetosPanel: {fileID: 1087758740}
 --- !u!4 &1469971829
 Transform:
@@ -26511,11 +26511,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6252060457604224271, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1383.8
+      value: -47.4
       objectReference: {fileID: 0}
     - target: {fileID: 6252060457604224271, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -130.1
+      value: -13.3
       objectReference: {fileID: 0}
     - target: {fileID: 6252060457604224271, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
       propertyPath: m_LocalPosition.z
