@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.VisualScripting;
 
 public class TutorialUI : MonoBehaviour
 {
@@ -21,7 +22,8 @@ public class TutorialUI : MonoBehaviour
 
     private float velocidad = 2f;  // velocitat de moviment
     private float amplitud = 10f;  // Ajusta què tant es mou de dalt a baix
-    
+
+    private RectTransform canvasRect;
 
     void Start()
     {
@@ -42,6 +44,9 @@ public class TutorialUI : MonoBehaviour
         estrellasPanel.gameObject.SetActive(true);
         runPanel.gameObject.SetActive(true);
         checkpointPanel.SetActive(false);
+
+        //obtenim referencia al Canvas
+        canvasRect = checkpointPanel.GetComponentInParent<Canvas>().GetComponent<RectTransform>();
 
     }
 
@@ -69,19 +74,53 @@ public class TutorialUI : MonoBehaviour
             cogerObjetosPanel.gameObject.SetActive(false);
         }
 
+        if (Camera.main != null && checkpointPanel.activeSelf)
+        {
+            UpdateCheckpointPanelPosition();
+        }
+
     }
+
+    private void UpdateCheckpointPanelPosition()
+    {
+        if (Camera.main == null || checkpointPanel == null || canvasRect == null) return;
+
+        // Obtener la esquina superior derecha de la cámara en coordenadas de pantalla
+        Vector3 screenTopRight = Camera.main.ViewportToScreenPoint(new Vector3(1, 1, 0));
+
+        // Convertir la posición de pantalla a coordenadas locales dentro del canvas
+        Vector2 localPoint;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screenTopRight, Camera.main, out localPoint);
+
+        // Aplicar la posición con un margen de 50px
+        checkpointPanel.GetComponent<RectTransform>().anchoredPosition = localPoint + new Vector2(-40, -40);
+    }
+
 
     public void ShowMessage(string message)
     {
         if (checkpointText != null && checkpointPanel != null)
         {
             checkpointText.text = message;
+
+            //Mou el panell a la posicio correcta
+            UpdateCheckpointPanelPosition();
+
             checkpointPanel.SetActive(true);
             Debug.Log("Mensaje mostrado en TutorialUI: " + message);
+
+            //Crido a HideChekpointPanel() despres de 3 seg
+            Invoke(nameof(HideCheckpointPanel), 10f);
+
         } else
         {
             Debug.LogError("checkpointText o checkpointPanel no están asignados en el Inspector.");
         }
+    }
+
+    private void HideCheckpointPanel()
+    {
+        checkpointPanel.SetActive(false);
     }
 
 }

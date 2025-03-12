@@ -32,7 +32,7 @@ public class Checkpoint : MonoBehaviour
 
                 if (tutorialUI != null)
                 {
-                    tutorialUI.ShowMessage("¡Checkpoint alcanzado!");
+                    tutorialUI.ShowMessage("¡Partida guardada!");
                 } else
                 {
                     Debug.LogError("TutorialUI no está asignado en el Inspector.");
