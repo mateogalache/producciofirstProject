@@ -28,6 +28,7 @@ public class StarUIManager : MonoBehaviour
     private Vector3[] targetPositions; //posiciones finales para formar la palabra ANDY
     private bool animateStars = false; //booleano que indica si la animació se activa
 
+    private Vector3 centerScreen;
 
     void Awake()
     {
@@ -53,6 +54,8 @@ public class StarUIManager : MonoBehaviour
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
+        centerScreen = new Vector3(Screen.width / 2, Screen.height / 2, 0);
+
         targetPositions = GetTargetPositionsForAndy(); // Guardamos las posiciones finales de la animación
 
 
@@ -117,54 +120,64 @@ public class StarUIManager : MonoBehaviour
 
     private void MoveStarsToFormName()
     {
+        bool allArrived = true;
+
         //bucle per recorrer totes les estrelles i mou cadascuna fins destí
         for (int i = 0; i < collectedStars.Count && i < targetPositions.Length; i++)
         {
             GameObject star = collectedStars[i];
             Vector3 targetPos = targetPositions[i];
-
-            float step = 200f * Time.deltaTime;
+            float step = 300f * Time.deltaTime;
             star.transform.position = Vector3.MoveTowards(star.transform.position, targetPos, step);
+
+            if (star.transform.position != targetPositions[i])
+                allArrived = false;
+
         }
 
-        //verifiquem si totes les estrelles han arribat a la posicio
-        bool allStarsArrived = true;
-        for (int i = 0; i < collectedStars.Count && i < targetPositions.Length; i++)
-        {
-            if (collectedStars[i].transform.position != targetPositions[i])
-            {
-                allStarsArrived = false;
-                break;
-            }
-        }
-
-        if (allStarsArrived)
+        if (allArrived)
         {
             animateStars = false;
-            Debug.Log("Animación final completada.");
+            Debug.Log("Animació final completada.");
         }
     }
 
     //defineix totes les posicions in cada estrella ha de moure's per formar la paraula
     private Vector3[] GetTargetPositionsForAndy()
     {
+        float centerX = Screen.width / 2;
+        float centerY = Screen.height / 2;
+
         return new Vector3[]
         {
-            new Vector3(-100, 50, 0), new Vector3(-90, 70, 0), new Vector3(-80, 50, 0), // "A"
-            new Vector3(-60, 70, 0), new Vector3(-60, 50, 0),                           // "N"
-            new Vector3(-30, 60, 0), new Vector3(-20, 50, 0), new Vector3(-10, 60, 0),  // "D"
-            new Vector3(10, 70, 0), new Vector3(15, 50, 0), new Vector3(20, 70, 0),    // "Y"
+
+            /*
+            new Vector3(centerX - 150, centerY + 100, 0), new Vector3(centerX - 130, centerY + 150, 0), new Vector3(centerX - 110, centerY + 100, 0), // "A"
+            new Vector3(centerX - 60, centerY + 150, 0), new Vector3(centerX - 60, centerY + 100, 0), // "N"
+            new Vector3(centerX, centerY + 140, 0), new Vector3(centerX + 20, centerY + 100, 0), new Vector3(centerX + 40, centerY + 140, 0), // "D"
+            new Vector3(centerX + 90, centerY + 150, 0), new Vector3(centerX + 110, centerY + 100, 0), new Vector3(centerX + 130, centerY + 150, 0), // "Y"
+            */
+
+            // "A"
+
+            new Vector3(centerX - 160, centerY + 80, 0), new Vector3(centerX - 140, centerY + 120, 0),
+            new Vector3(centerX - 120, centerY + 80, 0), new Vector3(centerX - 140, centerY + 100, 0),
+
+            // "N"
+            new Vector3(centerX - 90, centerY + 120, 0), new Vector3(centerX - 90, centerY + 80, 0),
+            new Vector3(centerX - 60, centerY + 120, 0), new Vector3(centerX - 60, centerY + 80, 0),
+            new Vector3(centerX - 75, centerY + 100, 0),
+
+            // "D"
+            new Vector3(centerX - 30, centerY + 120, 0), new Vector3(centerX - 30, centerY + 80, 0),
+            new Vector3(centerX, centerY + 110, 0), new Vector3(centerX, centerY + 90, 0),
+
+            // "Y"
+            new Vector3(centerX + 40, centerY + 120, 0), new Vector3(centerX + 60, centerY + 100, 0),
+            new Vector3(centerX + 80, centerY + 120, 0), new Vector3(centerX + 60, centerY + 80, 0),
+
         };
+
     }
 
-    /*
-    /// <summary>
-    /// Finaliza el juego cuando se recolectan todas las estrellas.
-    /// </summary>
-    private void EndGame()
-    {
-        Debug.Log("¡Juego terminado! Todas las estrellas han sido recolectadas.");
-        SceneManager.LoadScene("MainMenu");
-    }
-    */
 }

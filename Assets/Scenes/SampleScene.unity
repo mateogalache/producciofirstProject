@@ -14014,8 +14014,8 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 14.44899
-  MaxDistance: 31.175972
+  MinDistance: 31.175972
+  MaxDistance: 31.175974
   Pan2D: 0
   rolloffMode: 2
   BypassEffects: 0
@@ -28277,11 +28277,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6252060457604224271, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -49
+      value: -44
       objectReference: {fileID: 0}
     - target: {fileID: 6252060457604224271, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -15
+      value: -14
       objectReference: {fileID: 0}
     - target: {fileID: 6252060457604224271, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
       propertyPath: m_LocalPosition.z
