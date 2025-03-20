@@ -8,7 +8,7 @@ public class DoorController : MonoBehaviour
     {
         if (!isOpen)
         {
-            Debug.Log("¡Puerta abierta!");
+            Debug.Log("ï¿½Puerta abierta!");
             // Ejemplo sencillo: desactivar el objeto para abrir la puerta.
             gameObject.SetActive(false);
             isOpen = true;
@@ -17,12 +17,6 @@ public class DoorController : MonoBehaviour
 
     public void CloseDoor()
     {
-        if (isOpen)
-        {
-            Debug.Log("¡Puerta cerrada!");
-            // Vuelve a activar el objeto para cerrar la puerta.
-            gameObject.SetActive(true);
-            isOpen = false;
-        }
+        
     }
 }

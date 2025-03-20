@@ -5,6 +5,16 @@ public class Checkpoint : MonoBehaviour
     // Opcional: Puedes añadir una variable para marcar si el checkpoint ya ha sido activado
     private bool isActivated = false;
 
+    public TutorialUI tutorialUI;
+
+    private void Start()
+    {
+        if (tutorialUI == null)
+        {
+            tutorialUI = FindObjectOfType<TutorialUI>(); // Busca automáticamente si no está asignado
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player") && !isActivated)
@@ -19,6 +29,16 @@ public class Checkpoint : MonoBehaviour
 
                 // Opcional: Añadir feedback visual o auditivo aquí
                 ActivateCheckpointVisual();
+
+                if (tutorialUI != null)
+                {
+                    tutorialUI.ShowMessage("¡Partida guardada!");
+                } else
+                {
+                    Debug.LogError("TutorialUI no está asignado en el Inspector.");
+                }
+
+                   
             }
             else
             {
@@ -40,4 +60,5 @@ public class Checkpoint : MonoBehaviour
 
         // Puedes añadir partículas, sonidos, etc.
     }
+
 }

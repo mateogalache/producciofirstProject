@@ -18,5 +18,19 @@ public class VoidDetector : MonoBehaviour
                 Debug.LogError("GameManager no está presente en la escena.");
             }
         }
+
+        if (other.CompareTag("Box"))
+        {
+            // Llamamos al método ResetPosition del script BoxController
+            BoxController box = other.GetComponent<BoxController>();
+            if (box != null)
+            {
+                box.ResetPosition();
+            }
+            else
+            {
+                Debug.LogError("El objeto con tag 'Box' no tiene el script BoxController asignado.");
+            }
+        }
     }
 }
