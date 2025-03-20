@@ -19,11 +19,11 @@ public class SquareColorChanger : MonoBehaviour
         {
             yield return new WaitForSeconds(changeInterval);
 
-            spriteRenderer.color = Color.white;
+            spriteRenderer.color = Color.red;
 
             yield return new WaitForSeconds(whiteDuration);
 
-            spriteRenderer.color = Color.black;
+            spriteRenderer.color = Color.white;
         }
     }
 }
