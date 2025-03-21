@@ -2613,13 +2613,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201119790}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1136.5647, y: 102.6825, z: 1.5958928}
-  m_LocalScale: {x: 4.590184, y: 2.7305145, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: 0.16185464, w: -0.9868146}
+  m_LocalPosition: {x: 1143, y: 117, z: 1.5958928}
+  m_LocalScale: {x: 5.5949397, y: 2.7305145, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1504002629}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 341.371}
 --- !u!212 &201119792
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -8475,6 +8475,14 @@ PrefabInstance:
     - target: {fileID: -8059360720507311357, guid: 665a7549ce2bc584880c42fcb5e5104b, type: 3}
       propertyPath: whiteDuration
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8059360720507311357, guid: 665a7549ce2bc584880c42fcb5e5104b, type: 3}
+      propertyPath: maxChangeInterval
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8059360720507311357, guid: 665a7549ce2bc584880c42fcb5e5104b, type: 3}
+      propertyPath: minChangeInterval
+      value: 0.14
       objectReference: {fileID: 0}
     - target: {fileID: 1432988162234467453, guid: 665a7549ce2bc584880c42fcb5e5104b, type: 3}
       propertyPath: m_Name
@@ -27604,6 +27612,14 @@ PrefabInstance:
       propertyPath: whiteDuration
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: -8059360720507311357, guid: 665a7549ce2bc584880c42fcb5e5104b, type: 3}
+      propertyPath: maxChangeInterval
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8059360720507311357, guid: 665a7549ce2bc584880c42fcb5e5104b, type: 3}
+      propertyPath: minChangeInterval
+      value: 0.14
+      objectReference: {fileID: 0}
     - target: {fileID: 1432988162234467453, guid: 665a7549ce2bc584880c42fcb5e5104b, type: 3}
       propertyPath: m_Name
       value: FakeFloor (3)
@@ -28602,6 +28618,14 @@ PrefabInstance:
       propertyPath: whiteDuration
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: -8059360720507311357, guid: 665a7549ce2bc584880c42fcb5e5104b, type: 3}
+      propertyPath: maxChangeInterval
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8059360720507311357, guid: 665a7549ce2bc584880c42fcb5e5104b, type: 3}
+      propertyPath: minChangeInterval
+      value: 0.14
+      objectReference: {fileID: 0}
     - target: {fileID: 1432988162234467453, guid: 665a7549ce2bc584880c42fcb5e5104b, type: 3}
       propertyPath: m_Name
       value: FakeFloor
@@ -28939,6 +28963,14 @@ PrefabInstance:
       propertyPath: whiteDuration
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: -8059360720507311357, guid: 665a7549ce2bc584880c42fcb5e5104b, type: 3}
+      propertyPath: maxChangeInterval
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8059360720507311357, guid: 665a7549ce2bc584880c42fcb5e5104b, type: 3}
+      propertyPath: minChangeInterval
+      value: 0.14
+      objectReference: {fileID: 0}
     - target: {fileID: 1432988162234467453, guid: 665a7549ce2bc584880c42fcb5e5104b, type: 3}
       propertyPath: m_Name
       value: FakeFloor (2)
@@ -29204,6 +29236,18 @@ PrefabInstance:
     - target: {fileID: -8059360720507311357, guid: 665a7549ce2bc584880c42fcb5e5104b, type: 3}
       propertyPath: whiteDuration
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8059360720507311357, guid: 665a7549ce2bc584880c42fcb5e5104b, type: 3}
+      propertyPath: maxWhiteDuration
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8059360720507311357, guid: 665a7549ce2bc584880c42fcb5e5104b, type: 3}
+      propertyPath: maxChangeInterval
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8059360720507311357, guid: 665a7549ce2bc584880c42fcb5e5104b, type: 3}
+      propertyPath: minChangeInterval
+      value: 0.14
       objectReference: {fileID: 0}
     - target: {fileID: 1432988162234467453, guid: 665a7549ce2bc584880c42fcb5e5104b, type: 3}
       propertyPath: m_Name
@@ -45742,14 +45786,14 @@ PrefabInstance:
     - target: {fileID: 7700684573295877210, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: fbdd6eca5faacce42a0872f059aa5eb4, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 7700684573295877210, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
       propertyPath: m_SortingOrder
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7700684573295877210, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
       propertyPath: m_WasSpriteAssigned
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9030633639516899665, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
       propertyPath: m_Size.x
