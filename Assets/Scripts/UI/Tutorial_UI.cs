@@ -85,14 +85,11 @@ public class TutorialUI : MonoBehaviour
     {
         if (Camera.main == null || checkpointPanel == null || canvasRect == null) return;
 
-        // Obtener la esquina superior derecha de la cámara en coordenadas de pantalla
         Vector3 screenTopRight = Camera.main.ViewportToScreenPoint(new Vector3(1, 1, 0));
 
-        // Convertir la posición de pantalla a coordenadas locales dentro del canvas
         Vector2 localPoint;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screenTopRight, Camera.main, out localPoint);
 
-        // Aplicar la posición con un margen de 50px
         checkpointPanel.GetComponent<RectTransform>().anchoredPosition = localPoint + new Vector2(-40, -40);
     }
 
@@ -110,7 +107,7 @@ public class TutorialUI : MonoBehaviour
             Debug.Log("Mensaje mostrado en TutorialUI: " + message);
 
             //Crido a HideChekpointPanel() despres de 3 seg
-            Invoke(nameof(HideCheckpointPanel), 10f);
+            Invoke(nameof(HideCheckpointPanel), 3f);
 
         } else
         {
