@@ -21,12 +21,12 @@ public class StarUIManager : MonoBehaviour
     public AudioClip collectSound;
 
     private AudioSource audioSource;
-    private int starCount = 0; //contador de estrellas recolectadas
-    private int maxStars = 14; // Número máximo de estrellas para terminar el juego
+    private int starCount = 0; 
+    private int maxStars = 14; 
 
-    private List<GameObject> collectedStars = new List<GameObject>(); //Lista que almacena las estrellas recolectadas
-    private Vector3[] targetPositions; //posiciones finales para formar la palabra ANDY
-    private bool animateStars = false; //booleano que indica si la animació se activa
+    private List<GameObject> collectedStars = new List<GameObject>(); 
+    private Vector3[] targetPositions;
+    private bool animateStars = false;
 
     private Vector3 centerScreen;
 
@@ -34,12 +34,11 @@ public class StarUIManager : MonoBehaviour
 
     void Awake()
     {
-        // Implementar el patrón Singleton
+        
         if (Instance == null)
         {
             Instance = this;
-            // Opcional: Mantener este objeto entre escenas
-            // DontDestroyOnLoad(gameObject);
+            
         }
         else
         {
@@ -50,7 +49,6 @@ public class StarUIManager : MonoBehaviour
     void Start()
     {
 
-        // Obtener o añadir un AudioSource para reproducir sonidos
         audioSource = GetComponent<AudioSource>();
 
         if (audioSource == null)
@@ -84,20 +82,17 @@ public class StarUIManager : MonoBehaviour
         starCount++;
         UpdateStarUI();
 
-        //GameObject newStar = Instantiate(starUIPrefab, starContainer);
-        //collectedStars.Add(newStar);
-
         // Reproducir sonido de recolección
         if (collectSound != null)
             audioSource.PlayOneShot(collectSound);
         else
             Debug.LogWarning("No se ha asignado un clip de sonido de recolección en StarUIManager.");
 
-        // Verificar si se ha alcanzado el número máximo de estrellas
+        // Verifiquem si hem arribat al màxim d'estrelles
         if (starCount >= maxStars)
         {
             
-            animateStars = true; // Activar la animación en el Update
+            animateStars = true; 
         }
     }
 
@@ -232,34 +227,10 @@ public class StarUIManager : MonoBehaviour
 
                 letterLine.SetPosition(i, worldPos);
 
-                /*
-                Vector3 worldPos = collectedStars[index].transform.position;
-
-                if (starContainer != null && starContainer.GetComponentInParent<Canvas>() != null)
-                {
-                    worldPos = Camera.main.ScreenToWorldPoint(new Vector3(worldPos.x, worldPos.y, Camera.main.nearClipPlane));
-                }*/
-
-
-                //letterLine.SetPosition(i, worldPos);
-
-                //lineRenderer.positionCount = collectedStars.Count;
-
-                /*
-                for (int j = 0; j < collectedStars.Count; j++)
-                {
-                    Vector3 worldPos = Camera.main.ScreenToWorldPoint(collectedStars[j].transform.position);
-                    worldPos.z = 0;
-                    letterLine.SetPosition(i, worldPos);
-
-                }*/
-
-
             }
             letterLine.enabled = true;
 
         }
-        //lineRenderer.enabled = true;
 
     }
 

@@ -55,13 +55,13 @@ public class TutorialUI : MonoBehaviour
 
         if (tutorialPanel == null || cogerObjetosPanel == null || estrellasPanel == null || runPanel == null) return;
 
-        float moviment = Mathf.Sin(Time.time * velocidad) * amplitud;
+        //float moviment = Mathf.Sin(Time.time * velocidad) * amplitud;
 
         //Movem panels
-        tutorialPanel.anchoredPosition = new Vector2(posicionInicialTutorial.x, posicionInicialTutorial.y + moviment);
-        cogerObjetosPanel.anchoredPosition = new Vector2(posicionInicialCogerObjetos.x, posicionInicialCogerObjetos.y + moviment);
-        estrellasPanel.anchoredPosition = new Vector2(posicionInicialEstrellas.x, posicionInicialEstrellas.y + moviment);
-        runPanel.anchoredPosition = new Vector2(posicionInicialRun.x, posicionInicialRun.y + moviment);
+        //tutorialPanel.anchoredPosition = new Vector2(posicionInicialTutorial.x, posicionInicialTutorial.y + moviment);
+        //cogerObjetosPanel.anchoredPosition = new Vector2(posicionInicialCogerObjetos.x, posicionInicialCogerObjetos.y + moviment);
+        //estrellasPanel.anchoredPosition = new Vector2(posicionInicialEstrellas.x, posicionInicialEstrellas.y + moviment);
+        //runPanel.anchoredPosition = new Vector2(posicionInicialRun.x, posicionInicialRun.y + moviment);
 
 
         if (Input.GetKeyDown(KeyCode.Space)) 
