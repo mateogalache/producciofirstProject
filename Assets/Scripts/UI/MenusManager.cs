@@ -8,7 +8,7 @@ public class MenusManager: MonoBehaviour
     [SerializeField] private string menuControlsScene = "ControlsMenu";
     [SerializeField] private string menuHabilitatsScene = "HabilitiesMenu";
     [SerializeField] private string menuPrincipalScene = "MenuPrincipal";
-    [SerializeField] private string nivell1Scene = "Sample Scene";
+    [SerializeField] private string nivell1Scene = "Level1";
 
     //private bool isPaused = false;
 
@@ -17,7 +17,7 @@ public class MenusManager: MonoBehaviour
 
     void Update()
     {
-        // Obrir menú de pausa amb la tecla Esc
+        // Obrir menï¿½ de pausa amb la tecla Esc
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (!isMenuOpen)
@@ -30,23 +30,23 @@ public class MenusManager: MonoBehaviour
           
         }
 
-        // Obrir menú de controls amb fletxa Up
+        // Obrir menï¿½ de controls amb fletxa Up
         if (Input.GetKeyDown(KeyCode.UpArrow) && !isMenuOpen)
         {
             OpenMenu(menuControlsScene);
         }
 
-        // Obrir menú d`habilitats amb fletxa Down
+        // Obrir menï¿½ d`habilitats amb fletxa Down
         if (Input.GetKeyDown(KeyCode.DownArrow) && !isMenuOpen)
         {
             OpenMenu(menuHabilitatsScene);
         }
     }
 
-    // Carregar escena del menú seleccionat
+    // Carregar escena del menï¿½ seleccionat
     private void OpenMenu(string nomMenu)
     {
-        SceneManager.LoadScene(nomMenu, LoadSceneMode.Additive); // Carregar el menú sobre el nivell actual
+        SceneManager.LoadScene(nomMenu, LoadSceneMode.Additive); // Carregar el menï¿½ sobre el nivell actual
         currentMenu = nomMenu;
         isMenuOpen = true;
         Time.timeScale = 0; // Pausar el joc
@@ -56,7 +56,7 @@ public class MenusManager: MonoBehaviour
     public void CloseMenu()
     {
         if (currentMenu != null) {
-             SceneManager.UnloadSceneAsync(currentMenu); // Tanca el menú actual
+             SceneManager.UnloadSceneAsync(currentMenu); // Tanca el menï¿½ actual
             currentMenu = null;
         }
         isMenuOpen = false;
@@ -64,22 +64,22 @@ public class MenusManager: MonoBehaviour
        
     }
 
-    // Guardar i sortir al menú principal
+    // Guardar i sortir al menï¿½ principal
     public void SaveAndExit()
     {
-        // FALTA afegir funcionalitat per guardar el progrés
+        // FALTA afegir funcionalitat per guardar el progrï¿½s
         Debug.Log("Partida guardada!");
 
-        // Tornar al menú principal
+        // Tornar al menï¿½ principal
         Time.timeScale = 1; // Reanudar temps
-        SceneManager.LoadScene(menuPrincipalScene); // Carregar menú principal
+        SceneManager.LoadScene(menuPrincipalScene); // Carregar menï¿½ principal
     }
 
-    // Sortir al menú principal
+    // Sortir al menï¿½ principal
     public void ExitToMainMenu()
     {
         Time.timeScale = 1; // Reanudar temps
-        SceneManager.LoadScene(menuPrincipalScene); // Carregar menú principal
+        SceneManager.LoadScene(menuPrincipalScene); // Carregar menï¿½ principal
     }
 
     // Tornar al nivell 1
