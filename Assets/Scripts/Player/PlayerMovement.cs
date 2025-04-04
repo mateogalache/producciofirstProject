@@ -2,39 +2,43 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(PlayerAudio))] // Asegúrate de tener un script PlayerAudio (o elimínalo si no lo usas)
+[RequireComponent(typeof(PlayerAudio))]
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 10f;
-    [SerializeField] private float accelerationTime = 0.1f;   // Tiempo para alcanzar la velocidad completa al mover
-    [SerializeField] private float decelerationTime = 0.05f;    // Tiempo para desacelerar al dejar de mover
+    [SerializeField] private float accelerationTime = 0.1f;
+    [SerializeField] private float decelerationTime = 0.05f;
     [SerializeField] private float jumpForce = 20f;
     [SerializeField] private float gravityScale = 2f;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius = 0.2f;
-    [SerializeField] private LayerMask groundLayer; // Capa(s) que se consideran suelo
+    [SerializeField] private LayerMask groundLayer;
 
     [Header("Jump Settings")]
-    [SerializeField] private float coyoteTime = 0.2f;       // Permite saltar poco después de dejar el suelo
-    [SerializeField] private float jumpBufferTime = 0.2f;   // Buffer para el salto antes de aterrizar
+    [SerializeField] private float coyoteTime = 0.2f;
+    [SerializeField] private float jumpBufferTime = 0.2f;
 
     [Header("Carry Settings")]
-    [SerializeField] private float jumpCarryMultiplier = 0.8f; // Reduce la fuerza del salto al cargar un objeto
+    [SerializeField] private float jumpCarryMultiplier = 0.8f;
 
     [Header("Drag Settings")]
-    [SerializeField] private Transform grabPoint;         // Punto de agarre hijo del jugador
-    [SerializeField] private float grabRadius = 1f;         // Radio de detección para objetos movibles
-    [SerializeField] private LayerMask draggableLayer;      // Capa asignada a objetos movibles
+    [SerializeField] private Transform grabPoint;
+    [SerializeField] private float grabRadius = 1f;
+    [SerializeField] private LayerMask draggableLayer;
 
     [Header("Glide Settings")]
-    [SerializeField] private float glideGravityScale = 0.5f; // Factor para reducir la gravedad al planear
-    [SerializeField] private float maxGlideFallSpeed = -2f;  // Velocidad máxima de caída cuando se planea
+    [SerializeField] private float glideGravityScale = 0.5f;
+    [SerializeField] private float maxGlideFallSpeed = -2f;
     private bool isGliding = false;
+
+    [Header("Dash Settings")]
+    [SerializeField] private PlayerDash dashComponent;
 
     private Rigidbody2D rb;
     private PlayerAudio playerAudio;
-    private Animator animator; // Opcional – si usas animaciones
+    private Animator animator;
+    private Collider2D playerCollider;
 
     private float horizontalInput;
     private float coyoteTimer;
@@ -43,11 +47,9 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isFacingRight = true;
     private bool canDoubleJump;
+    private bool enabledMovement = true;
 
-    // Referencia al objeto movible actualmente agarrado (si existe)
     private DraggableObject grabbedObject;
-
-    private Collider2D playerCollider;
 
     void Awake()
     {
@@ -55,31 +57,31 @@ public class PlayerMovement : MonoBehaviour
         rb.gravityScale = gravityScale;
         playerAudio = GetComponent<PlayerAudio>();
         playerCollider = GetComponent<Collider2D>();
-        animator = GetComponent<Animator>(); // Asegúrate de tener un Animator si usas animaciones
+        animator = GetComponent<Animator>();
     }
 
     void Update()
     {
+        if (!enabledMovement) return;
+
         GetInput();
         HandleJumpBuffer();
         UpdateCoyoteTimer();
         HandleGrabInput();
         HandleFlip();
         UpdateAnimations();
-        HandleGlideInput(); // Detecta si se debe activar el planeo
+        HandleGlideInput();
     }
 
     void FixedUpdate()
     {
+        if (!enabledMovement) return;
+
         Move();
         ApplyCustomGravity();
     }
 
-    #region Input & Movement
-
-    /// <summary>
-    /// Lee el input horizontal y el de salto.
-    /// </summary>
+    #region Movement Core
     private void GetInput()
     {
         horizontalInput = Input.GetAxisRaw("Horizontal");
@@ -94,15 +96,16 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Actualiza el temporizador coyote para permitir saltos justo después de salir del suelo.
-    /// </summary>
     private void UpdateCoyoteTimer()
     {
         if (IsGrounded())
         {
             coyoteTimer = coyoteTime;
             canDoubleJump = true;
+            if (dashComponent != null)
+            {
+                dashComponent.ResetAirDashes();
+            }
         }
         else
         {
@@ -110,9 +113,17 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Verifica si hay un salto en buffer y si se cumplen las condiciones para saltar.
-    /// </summary>
+    private void Move()
+    {
+        float currentSpeed = (grabbedObject != null) ? moveSpeed * 0.7f : moveSpeed;
+        float targetSpeed = horizontalInput * currentSpeed;
+        float smoothTime = Mathf.Abs(horizontalInput) > 0.01f ? accelerationTime : decelerationTime;
+        float newVelocityX = Mathf.SmoothDamp(rb.velocity.x, targetSpeed, ref velocityXSmoothing, smoothTime);
+        rb.velocity = new Vector2(newVelocityX, rb.velocity.y);
+    }
+    #endregion
+
+    #region Jump System
     private void HandleJumpBuffer()
     {
         if (jumpBufferTimer > 0f)
@@ -127,9 +138,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Ejecuta el salto. Si se carga un objeto, se reduce la fuerza de salto.
-    /// </summary>
     private void Jump()
     {
         float finalJumpForce = jumpForce;
@@ -142,29 +150,14 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = new Vector2(rb.velocity.x, finalJumpForce);
         playerAudio?.PlayJumpSound();
     }
+    #endregion
 
-    /// <summary>
-    /// Maneja el movimiento horizontal con suavizado de aceleración y desaceleración.
-    /// </summary>
-    private void Move()
-    {
-        float currentSpeed = (grabbedObject != null) ? moveSpeed * 0.7f : moveSpeed;
-        float targetSpeed = horizontalInput * currentSpeed;
-        float smoothTime = Mathf.Abs(horizontalInput) > 0.01f ? accelerationTime : decelerationTime;
-        float newVelocityX = Mathf.SmoothDamp(rb.velocity.x, targetSpeed, ref velocityXSmoothing, smoothTime);
-        rb.velocity = new Vector2(newVelocityX, rb.velocity.y);
-    }
-
-    /// <summary>
-    /// Aplica una gravedad personalizada y ajusta la física al planeo.
-    /// </summary>
+    #region Physics
     private void ApplyCustomGravity()
     {
         if (isGliding)
         {
-            // Aplica gravedad reducida al planear
             rb.velocity += Vector2.up * Physics2D.gravity.y * (glideGravityScale - 1) * Time.fixedDeltaTime;
-            // Limita la velocidad de caída
             if (rb.velocity.y < maxGlideFallSpeed)
             {
                 rb.velocity = new Vector2(rb.velocity.x, maxGlideFallSpeed);
@@ -174,58 +167,52 @@ public class PlayerMovement : MonoBehaviour
         {
             if (rb.velocity.y < 0)
             {
-                // Fuerza de gravedad aumentada al caer
                 rb.velocity += Vector2.up * Physics2D.gravity.y * (gravityScale * 2 - 1) * Time.fixedDeltaTime;
             }
             else if (rb.velocity.y > 0 && !Input.GetButton("Jump"))
             {
-                // Corta la altura del salto si se suelta el botón antes
                 rb.velocity += Vector2.up * Physics2D.gravity.y * gravityScale * Time.fixedDeltaTime;
             }
         }
     }
 
-    /// <summary>
-    /// Comprueba si el jugador está en el suelo.
-    /// </summary>
-    private bool IsGrounded()
+    public bool IsGrounded()
     {
         return Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
     }
+    #endregion
 
-    /// <summary>
-    /// Invierte la dirección del sprite del jugador según el movimiento.
-    /// </summary>
+    #region Visuals
     private void HandleFlip()
     {
         if ((horizontalInput > 0 && !isFacingRight) ||
             (horizontalInput < 0 && isFacingRight))
         {
-            isFacingRight = !isFacingRight;
-            Vector3 scale = transform.localScale;
-            scale.x *= -1;
-            transform.localScale = scale;
+            Flip();
         }
     }
 
-    /// <summary>
-    /// Actualiza los parámetros del Animator (si se utiliza).
-    /// </summary>
+    private void Flip()
+    {
+        isFacingRight = !isFacingRight;
+        Vector3 scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
+    }
+
     private void UpdateAnimations()
     {
-        if (animator != null)
-        {
-            animator.SetFloat("Speed", Mathf.Abs(horizontalInput));
-            animator.SetBool("IsGrounded", IsGrounded());
-            animator.SetFloat("VerticalVelocity", rb.velocity.y);
-            animator.SetBool("IsCarrying", grabbedObject != null);
-            animator.SetBool("IsGliding", isGliding);
-        }
-    }
+        if (animator == null) return;
 
-    /// <summary>
-    /// Controla la activación del planeo: se activa si el jugador está en el aire, cayendo y mantiene pulsado salto.
-    /// </summary>
+        animator.SetFloat("Speed", Mathf.Abs(horizontalInput));
+        animator.SetBool("IsGrounded", IsGrounded());
+        animator.SetFloat("VerticalVelocity", rb.velocity.y);
+        animator.SetBool("IsCarrying", grabbedObject != null);
+        animator.SetBool("IsGliding", isGliding);
+    }
+    #endregion
+
+    #region Special Abilities
     private void HandleGlideInput()
     {
         if (!IsGrounded() && rb.velocity.y < 0 && Input.GetButton("Jump"))
@@ -238,15 +225,21 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    public void SetMovementControl(bool enabled)
+    {
+        enabledMovement = enabled;
+        if (!enabled)
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
+        }
+    }
     #endregion
 
-    #region Dragging
-
-    /// <summary>
-    /// Maneja el input para agarrar o soltar un objeto movible.
-    /// </summary>
+    #region Grab System
     private void HandleGrabInput()
     {
+        if (!enabledMovement) return;
+
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             if (grabbedObject == null)
@@ -263,22 +256,12 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Intenta agarrar un objeto dentro del área definida.
-    /// </summary>
     private void TryGrab()
     {
-        if (grabPoint == null)
-        {
-            Debug.LogWarning("GrabPoint no asignado en el jugador.");
-            return;
-        }
+        if (grabPoint == null) return;
 
         Collider2D[] hits = Physics2D.OverlapCircleAll(grabPoint.position, grabRadius, draggableLayer);
-        if (hits.Length == 0)
-        {
-            return;
-        }
+        if (hits.Length == 0) return;
 
         foreach (Collider2D col in hits)
         {
@@ -287,19 +270,12 @@ public class PlayerMovement : MonoBehaviour
             {
                 grabbedObject = dObj;
                 grabbedObject.Grab(grabPoint);
-                Collider2D boxCollider = grabbedObject.GetComponent<Collider2D>();
-                if (playerCollider != null && boxCollider != null)
-                {
-                    Physics2D.IgnoreCollision(playerCollider, boxCollider, true);
-                }
+                Physics2D.IgnoreCollision(playerCollider, col, true);
                 return;
             }
         }
     }
 
-    /// <summary>
-    /// Suelta el objeto movible actualmente agarrado.
-    /// </summary>
     private void ReleaseGrab()
     {
         if (grabbedObject != null)
@@ -319,11 +295,16 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForFixedUpdate();
         Physics2D.IgnoreCollision(playerCol, boxCol, false);
     }
+    #endregion
 
+    #region Public Accessors
+    public bool IsFacingRight
+    {
+        get { return isFacingRight; }
+    }
     #endregion
 
     #region Gizmos
-
     void OnDrawGizmosSelected()
     {
         if (groundCheck != null)
@@ -337,6 +318,5 @@ public class PlayerMovement : MonoBehaviour
             Gizmos.DrawWireSphere(grabPoint.position, grabRadius);
         }
     }
-
     #endregion
 }
