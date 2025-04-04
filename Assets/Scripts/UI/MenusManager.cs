@@ -7,49 +7,83 @@ public class MenusManager: MonoBehaviour
     [SerializeField] private string menuPausaScene = "PauseMenu";
     [SerializeField] private string menuControlsScene = "ControlsMenu";
     [SerializeField] private string menuHabilitatsScene = "HabilitiesMenu";
-    [SerializeField] private string menuPrincipalScene = "MenuPrincipal";
+    [SerializeField] private string menuPrincipalScene = "MainMenu";
     [SerializeField] private string nivell1Scene = "Level1";
 
     //private bool isPaused = false;
 
-    private string currentMenu = null; // Menu actual obert
+    private string currentMenu = null; // Menu actual ober
     private bool isMenuOpen = false;  // Si hi ha menu obert
+
+    private static MenusManager instance;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        } else
+        {
+            Destroy(gameObject);
+        }
+           
+    }
 
     void Update()
     {
         // Obrir men� de pausa amb la tecla Esc
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (!isMenuOpen)
+            if (currentMenu == menuPausaScene)
+            {
+                ReturnToGame();
+            }
+            else if (!isMenuOpen)
             {
                 OpenMenu(menuPausaScene);
-                //isPaused = true; 
-            } else {
-                CloseMenu();
+                
             }
           
         }
 
-        // Obrir men� de controls amb fletxa Up
-        if (Input.GetKeyDown(KeyCode.UpArrow) && !isMenuOpen)
+        if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            OpenMenu(menuControlsScene);
+            if (currentMenu == menuControlsScene)
+            {
+                ReturnToGame();
+            }
+            else if (!isMenuOpen)
+            {
+                OpenMenu(menuControlsScene);
+            }
         }
 
-        // Obrir men� d`habilitats amb fletxa Down
-        if (Input.GetKeyDown(KeyCode.DownArrow) && !isMenuOpen)
+        // DownArrow: Abrir menú de habilidades / volver al juego
+        if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            OpenMenu(menuHabilitatsScene);
+            if (currentMenu == menuHabilitatsScene)
+            {
+                ReturnToGame();
+            }
+            else if (!isMenuOpen)
+            {
+                OpenMenu(menuHabilitatsScene);
+            }
         }
     }
 
     // Carregar escena del men� seleccionat
     private void OpenMenu(string nomMenu)
     {
+        if (SceneManager.GetSceneByName(nomMenu).isLoaded)
+            return;
+
         SceneManager.LoadScene(nomMenu, LoadSceneMode.Additive); // Carregar el men� sobre el nivell actual
         currentMenu = nomMenu;
         isMenuOpen = true;
         Time.timeScale = 0; // Pausar el joc
+        RemoveExtraAudioListeners();
     }
 
     // Tornar al joc
@@ -68,7 +102,9 @@ public class MenusManager: MonoBehaviour
     public void SaveAndExit()
     {
         // FALTA afegir funcionalitat per guardar el progr�s
-        Debug.Log("Partida guardada!");
+        //Debug.Log("Partida guardada!");
+
+        Debug.Log("SaveAndExit presionado");
 
         // Tornar al men� principal
         Time.timeScale = 1; // Reanudar temps
@@ -78,6 +114,7 @@ public class MenusManager: MonoBehaviour
     // Sortir al men� principal
     public void ExitToMainMenu()
     {
+        Debug.Log("ExitToMainMenu presionado");
         Time.timeScale = 1; // Reanudar temps
         SceneManager.LoadScene(menuPrincipalScene); // Carregar men� principal
     }
@@ -85,8 +122,27 @@ public class MenusManager: MonoBehaviour
     // Tornar al nivell 1
     public void ReturnToGame()
     {
-        Time.timeScale = 1; // Reanudar temps
-        SceneManager.LoadScene(nivell1Scene); // Carregar el nivell 1 (Sample Scene)
+        //Time.timeScale = 1; // Reanudar temps
+        //SceneManager.LoadScene(nivell1Scene); // Carregar el nivell 1 (Sample Scene)
+
+        Debug.Log("ReturnToGame presionado");
+        CloseMenu();
     }
+
+    private void RemoveExtraAudioListeners()
+    {
+        AudioListener[] listeners = FindObjectsOfType<AudioListener>();
+
+        if (listeners.Length > 1)
+        {
+            Debug.LogWarning("Se detectaron múltiples AudioListeners. Desactivando los adicionales.");
+
+            for (int i = 1; i < listeners.Length; i++)
+            {
+                listeners[i].enabled = false; // En lugar de destruirlos, los desactivamos
+            }
+        } 
+    }
+
 
 }
