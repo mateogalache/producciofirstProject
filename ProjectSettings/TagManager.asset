@@ -9,6 +9,7 @@ TagManager:
   - Wall
   - UpDetector
   - PlatformDetector
+  - DashObject
   layers:
   - Default
   - TransparentFX
