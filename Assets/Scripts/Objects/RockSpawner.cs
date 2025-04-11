@@ -13,7 +13,7 @@ public class RockSpawner : MonoBehaviour
     {
         foreach (GameObject rock in rockObject)
         {
-            rock.SetActive(false);
+            rock.SetActive(false    );
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)
