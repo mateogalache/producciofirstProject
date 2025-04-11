@@ -11,8 +11,23 @@ public class MainMenuManager : MonoBehaviour
        SceneManager.LoadScene(sceneName);
    }
 
-   //Tancar joc
-   public void ExitGame() {
+    public void StartNewGame()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.StartNewGame(); // Llama a la función para comenzar un nuevo juego
+        }
+        else
+        {
+            Debug.LogError("GameManager no está disponible.");
+            SceneManager.LoadScene("Level1");
+        }
+       
+    }
+
+
+    //Tancar joc
+    public void ExitGame() {
        Debug.Log("Exiting the game...");
        #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false; // para el modo play en l'editor'
@@ -21,18 +36,24 @@ public class MainMenuManager : MonoBehaviour
         #endif
    }
 
-
-/*
-    // Start is called before the first frame update
-    void Start()
+    public void ContinueGame()
     {
-        
+        if (GameManager.Instance != null)
+        {
+            if (GameManager.Instance.HasSavedProgress())
+            {
+                GameManager.Instance.RestartLevel(); // Si hay progreso guardado, continúa desde el checkpoint
+            }
+            else
+            {
+                Debug.Log("No hay progreso guardado. Comienza un nuevo juego.");
+                StartNewGame(); // Si no hay progreso, se inicia un nuevo juego
+            }
+        }
+        else
+        {
+            Debug.LogError("GameManager no está disponible.");
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    */
 }
