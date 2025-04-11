@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     // Posición actual del checkpoint
-    private Vector3 currentCheckpoint;
+    private Vector3 currentCheckpoint = Vector3.zero;
 
     private void Awake()
     {
@@ -14,7 +14,8 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Persiste entre escenas
+            DontDestroyOnLoad(gameObject); // Persiste entre escena
+            Debug.Log("GameManager creado y persistente.");
         }
         else
         {
@@ -24,13 +25,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    public bool HasSavedProgress()
     {
         // Inicializar el checkpoint al inicio del nivel
-        currentCheckpoint = Vector3.zero; // Puedes ajustar esto según tu nivel
+        return currentCheckpoint != Vector3.zero;
     }
 
-    // Método para actualizar el checkpoint
     public void UpdateCheckpoint(Vector3 newCheckpoint)
     {
         currentCheckpoint = newCheckpoint;
@@ -49,6 +49,13 @@ public class GameManager : MonoBehaviour
         }
 
         // Opcional: Reiniciar la escena completa
-        // SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void StartNewGame()
+    {
+        currentCheckpoint = Vector3.zero; // Reseteamos el checkpoint al valor inicial
+        Debug.Log("Juego reseteado");
+        SceneManager.LoadScene("Level1");
     }
 }

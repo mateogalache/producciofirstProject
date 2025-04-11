@@ -32,8 +32,9 @@ public class MenusManager: MonoBehaviour
 
     void Update()
     {
+        /*
         // Obrir men� de pausa amb la tecla Esc
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.A))
         {
             if (currentMenu == menuPausaScene)
             {
@@ -47,7 +48,7 @@ public class MenusManager: MonoBehaviour
           
         }
 
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.W))
         {
             if (currentMenu == menuControlsScene)
             {
@@ -60,7 +61,7 @@ public class MenusManager: MonoBehaviour
         }
 
         // DownArrow: Abrir menú de habilidades / volver al juego
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKeyDown(KeyCode.D))
         {
             if (currentMenu == menuHabilitatsScene)
             {
@@ -84,6 +85,65 @@ public class MenusManager: MonoBehaviour
         isMenuOpen = true;
         Time.timeScale = 0; // Pausar el joc
         RemoveExtraAudioListeners();
+        */
+
+        if (Input.GetKeyDown(KeyCode.A)) ToggleMenu(menuPausaScene);
+        if (Input.GetKeyDown(KeyCode.W)) ToggleMenu(menuControlsScene);
+        if (Input.GetKeyDown(KeyCode.D)) ToggleMenu(menuHabilitatsScene);
+
+    }
+
+    private void ToggleMenu(string menuName)
+    {
+        if (currentMenu == menuName)
+            ReturnToGame();
+        else if (!isMenuOpen)
+            //OpenMenu(menuName);
+            StartCoroutine(OpenMenu(menuName));
+    }
+
+    private System.Collections.IEnumerator OpenMenu(string menuName)
+    {
+        //if (SceneManager.GetSceneByName(menuName).isLoaded)
+        //    return;
+
+        //SceneManager.LoadScene(menuName, LoadSceneMode.Additive);
+
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(menuName, LoadSceneMode.Additive);
+
+        // Esperar hasta que se cargue completamente
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
+
+        Scene loadedScene = SceneManager.GetSceneByName(menuName);
+        if (loadedScene.IsValid())
+        {
+            SceneManager.SetActiveScene(loadedScene);
+        }
+
+        currentMenu = menuName;
+        isMenuOpen = true;
+        Time.timeScale = 0;
+        RemoveExtraAudioListeners();
+        RemoveExtraEventSystems();
+
+       
+    }
+
+    private void RemoveExtraEventSystems()
+    {
+        UnityEngine.EventSystems.EventSystem[] systems = FindObjectsOfType<UnityEngine.EventSystems.EventSystem>();
+
+        if (systems.Length > 1)
+        {
+            // Dejamos activo solo el primero
+            for (int i = 1; i < systems.Length; i++)
+            {
+                systems[i].gameObject.SetActive(false);
+            }
+        }
     }
 
     // Tornar al joc
@@ -98,15 +158,12 @@ public class MenusManager: MonoBehaviour
        
     }
 
-    // Guardar i sortir al men� principal
     public void SaveAndExit()
     {
-        // FALTA afegir funcionalitat per guardar el progr�s
-        //Debug.Log("Partida guardada!");
 
         Debug.Log("SaveAndExit presionado");
 
-        // Tornar al men� principal
+        // Tornar al menu principal
         Time.timeScale = 1; // Reanudar temps
         SceneManager.LoadScene(menuPrincipalScene); // Carregar men� principal
     }
@@ -126,7 +183,9 @@ public class MenusManager: MonoBehaviour
         //SceneManager.LoadScene(nivell1Scene); // Carregar el nivell 1 (Sample Scene)
 
         Debug.Log("ReturnToGame presionado");
+        Time.timeScale = 1;
         CloseMenu();
+        //SceneManager.LoadScene(nivell1Scene);
     }
 
     private void RemoveExtraAudioListeners()
@@ -135,7 +194,7 @@ public class MenusManager: MonoBehaviour
 
         if (listeners.Length > 1)
         {
-            Debug.LogWarning("Se detectaron múltiples AudioListeners. Desactivando los adicionales.");
+            //Debug.LogWarning("Se detectaron múltiples AudioListeners. Desactivando los adicionales.");
 
             for (int i = 1; i < listeners.Length; i++)
             {

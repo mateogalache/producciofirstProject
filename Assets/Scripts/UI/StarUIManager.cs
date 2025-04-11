@@ -30,7 +30,7 @@ public class StarUIManager : MonoBehaviour
 
     private Vector3 centerScreen;
 
-    private LineRenderer lineRenderer;
+    //private LineRenderer lineRenderer;
 
     void Awake()
     {
@@ -57,20 +57,26 @@ public class StarUIManager : MonoBehaviour
         }
         centerScreen = new Vector3(Screen.width / 2, Screen.height / 2, 0);
 
-        if (lineRenderer == null)
-        {
-            lineRenderer = gameObject.AddComponent<LineRenderer>();
-        }
+        //if (lineRenderer == null)
+        //{
+        //    lineRenderer = gameObject.AddComponent<LineRenderer>();
+        //}
 
         //targetPositions = GetTargetPositionsForAndy(); // Guardamos las posiciones finales de la animación
 
-        lineRenderer.useWorldSpace = true;
-        lineRenderer.startWidth = 2.0f;
-        lineRenderer.endWidth = 2.0f;
-        lineRenderer.material = new Material(Shader.Find("Unlit/Color"));
-        lineRenderer.material.color = Color.white;
-        lineRenderer.enabled = false;
-        
+        //lineRenderer.useWorldSpace = true;
+        //lineRenderer.startWidth = 2.0f;
+        //lineRenderer.endWidth = 2.0f;
+        //lineRenderer.material = new Material(Shader.Find("Unlit/Color"));
+        //lineRenderer.material.color = Color.white;
+        //lineRenderer.enabled = false;
+
+        /////////////////////
+        ///lineRenderer.positionCount = 2;
+        //lineRenderer.SetPosition(0, new Vector3(0, 0, -1f));
+        //lineRenderer.SetPosition(1, new Vector3(300, 300, -1f));
+        //lineRenderer.enabled = true;
+
     }
 
     /// <summary>
@@ -91,7 +97,7 @@ public class StarUIManager : MonoBehaviour
         // Verifiquem si hem arribat al màxim d'estrelles
         if (starCount >= maxStars)
         {
-            
+            Debug.Log("Se han recogido todas las estrellas. Inicia animación.");
             animateStars = true; 
         }
     }
@@ -148,6 +154,7 @@ public class StarUIManager : MonoBehaviour
 
         if (allArrived)
         {
+            Debug.Log("Todas las estrellas llegaron a destino. Se invoca DrawLines.");
             animateStars = false;
             Invoke("DrawLines", 0.1f); // Dibuja las líneas una sola vez después de que las estrellas lleguen
             //DrawLines();// Solo dibujamos las líneas cuando todas las estrellas están en su lugar
@@ -164,28 +171,23 @@ public class StarUIManager : MonoBehaviour
         // Definir los índices de las estrellas que forman cada letra
         int[][] letterIndices = new int[][]
         {
-        //new int[] {0, 1, 2},     // A
-        //new int[] {3, 4, 5, 6},  // N
-        //new int[] {7, 8, 9},   // D
-        //new int[] {10, 11, 12, 13} // Y
 
-            // A: 2 líneas (triángulo)
-            new int[] { 0, 1, 2 }, // Formando una 'A' con dos líneas (1-2 y 2-3)
+            new int[] { 0, 1, 2, 0 }, //A
 
-            // N: 3 líneas (dos verticales y una diagonal)
-            new int[] { 3, 4, 5 }, // Formando la parte vertical
-            new int[] { 4, 6 },     // Formando la diagonal
+            //N
+            new int[] { 3, 4 }, // Vertical izquierda
+            new int[] { 4, 5 }, // Diagonal
+            new int[] { 5, 6 },
 
-            // D: 3 líneas (una vertical y dos diagonales)
-            new int[] { 7, 8 },     // Línea vertical
-            new int[] { 8, 9 },     // Diagonal superior
-            new int[] { 9, 10 },    // Diagonal inferior
+            //D
+            new int[] { 7, 8 }, // Vertical
+            new int[] { 8, 9 }, // Diagonal superior
+            new int[] { 9, 7 }, // Diagonal inferior cerrando forma curva
 
-            // Y: 3 líneas (dos diagonales y una vertical)
-            new int[] { 11, 12 },   // Diagonal izquierda
-            new int[] { 12, 13 },   // Diagonal derecha
-            new int[] { 13, 14 }    // Línea vertical
-          
+            //Y
+            new int[] { 10, 12 }, // Diagonal izquierda
+            new int[] { 11, 12 }, // Diagonal derecha
+            new int[] { 12, 13 }, // Vertical central
         };
 
         // Crear un LineRenderer para cada letra
@@ -204,10 +206,13 @@ public class StarUIManager : MonoBehaviour
             letterLine.useWorldSpace = true;
             letterLine.startWidth = 1.0f;
             letterLine.endWidth = 1.0f;
-            letterLine.material = new Material(Shader.Find("Unlit/Color"));
-            letterLine.material.color = Color.white;
+            //letterLine.material = new Material(Shader.Find("Unlit/Color"));
+            //letterLine.material.color = Color.white;
+            letterLine.material = new Material(Shader.Find("Sprites/Default"));
             letterLine.positionCount = indices.Length;
-            //letterLine.sortingOrder = 10;
+            //letterLine.sortingLayerName = "Default";
+            //letterLine.sortingOrder = 100;
+            letterLine.sortingOrder = 10;
 
             for (int i = 0; i < indices.Length; i++)
             {
@@ -215,17 +220,24 @@ public class StarUIManager : MonoBehaviour
 
                 if (index >= collectedStars.Count) continue; // Seguridad
 
-                //letterLine.SetPosition(i, collectedStars[index].transform.position);
-
                 Vector3 worldPos = collectedStars[index].transform.position;
 
+                /*
                 if (starContainer != null && starContainer.GetComponentInParent<Canvas>() != null)
                 {
                     worldPos = Camera.main.ScreenToWorldPoint(new Vector3(worldPos.x, worldPos.y, Camera.main.nearClipPlane));
                     worldPos.z = 0;
                 }
+                */
+                worldPos.z = 0f;
+                letterLine.SetPosition(i, worldPos);
+
+                // Si el canvas es World Space, no necesitas convertir nada
+                //worldPos = collectedStars[index].transform.position;
+
 
                 letterLine.SetPosition(i, worldPos);
+                Debug.DrawLine(worldPos, worldPos + Vector3.up * 10f, Color.red, 2f);
 
             }
             letterLine.enabled = true;
@@ -242,9 +254,8 @@ public class StarUIManager : MonoBehaviour
 
         return new Vector3[]
         {
-
-            //A
-            new Vector3(startX, startY, 0), 
+            
+             new Vector3(startX, startY, 0), 
             new Vector3(startX + 20, startY + 40, 0),
             new Vector3(startX + 40, startY, 0),
 
@@ -266,6 +277,7 @@ public class StarUIManager : MonoBehaviour
             new Vector3(startX + 260, startY + 20, 0), // Estrella 3 (parte inferior)
             new Vector3(startX + 260, startY, 0), // Estrella 4 (palo de la Y)
             
+ 
 
         };
 
