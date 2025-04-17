@@ -87,9 +87,9 @@ public class MenusManager: MonoBehaviour
         RemoveExtraAudioListeners();
         */
 
-        if (Input.GetKeyDown(KeyCode.A)) ToggleMenu(menuPausaScene);
-        if (Input.GetKeyDown(KeyCode.W)) ToggleMenu(menuControlsScene);
-        if (Input.GetKeyDown(KeyCode.D)) ToggleMenu(menuHabilitatsScene);
+        if (Input.GetKeyDown(KeyCode.Escape)) ToggleMenu(menuPausaScene);
+        if (Input.GetKeyDown(KeyCode.LeftShift)) ToggleMenu(menuControlsScene);
+        if (Input.GetKeyDown(KeyCode.LeftControl)) ToggleMenu(menuHabilitatsScene);
 
     }
 

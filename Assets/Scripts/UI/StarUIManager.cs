@@ -190,6 +190,10 @@ public class StarUIManager : MonoBehaviour
             new int[] { 12, 13 }, // Vertical central
         };
 
+        Canvas canvas = starContainer.GetComponentInParent<Canvas>();
+        Camera cam = Camera.main;
+
+
         // Crear un LineRenderer para cada letra
         foreach (var indices in letterIndices)
         {
@@ -204,8 +208,8 @@ public class StarUIManager : MonoBehaviour
             //LineRenderer letterLine = new GameObject("LetterLine").AddComponent<LineRenderer>();
 
             letterLine.useWorldSpace = true;
-            letterLine.startWidth = 1.0f;
-            letterLine.endWidth = 1.0f;
+            letterLine.startWidth = 2f;
+            letterLine.endWidth = 2f;
             //letterLine.material = new Material(Shader.Find("Unlit/Color"));
             //letterLine.material.color = Color.white;
             letterLine.material = new Material(Shader.Find("Sprites/Default"));
@@ -214,21 +218,34 @@ public class StarUIManager : MonoBehaviour
             //letterLine.sortingOrder = 100;
             letterLine.sortingOrder = 10;
 
+           
             for (int i = 0; i < indices.Length; i++)
             {
                 int index = indices[i];
 
                 if (index >= collectedStars.Count) continue; // Seguridad
 
-                Vector3 worldPos = collectedStars[index].transform.position;
+                Vector3 uiPosition = collectedStars[index].GetComponent<RectTransform>().position;
 
-                /*
-                if (starContainer != null && starContainer.GetComponentInParent<Canvas>() != null)
+                //Vector3 worldPos = collectedStars[index].transform.position;
+                Vector3 worldPos;
+
+                if (canvas.renderMode == RenderMode.WorldSpace)
                 {
-                    worldPos = Camera.main.ScreenToWorldPoint(new Vector3(worldPos.x, worldPos.y, Camera.main.nearClipPlane));
-                    worldPos.z = 0;
+                    //worldPos = cam.ScreenToWorldPoint(new Vector3(uiPosition.x, uiPosition.y, 10f)); // Ajusta Z si es necesario
+                    worldPos = collectedStars[index].transform.position;
+                } else
+                {
+                    Vector3 uiPos = collectedStars[index].GetComponent<RectTransform>().position;
+                    worldPos = cam.ScreenToWorldPoint(new Vector3(uiPos.x, uiPos.y, 10f));
                 }
-                */
+                    /*
+                    if (starContainer != null && starContainer.GetComponentInParent<Canvas>() != null)
+                    {
+                        worldPos = Camera.main.ScreenToWorldPoint(new Vector3(worldPos.x, worldPos.y, Camera.main.nearClipPlane));
+                        worldPos.z = 0;
+                    }
+                    */
                 worldPos.z = 0f;
                 letterLine.SetPosition(i, worldPos);
 
@@ -236,9 +253,9 @@ public class StarUIManager : MonoBehaviour
                 //worldPos = collectedStars[index].transform.position;
 
 
-                letterLine.SetPosition(i, worldPos);
-                Debug.DrawLine(worldPos, worldPos + Vector3.up * 10f, Color.red, 2f);
-
+                //letterLine.SetPosition(i, worldPos);
+                //Debug.DrawLine(worldPos, worldPos + Vector3.up * 10f, Color.red, 2f);
+            
             }
             letterLine.enabled = true;
 
