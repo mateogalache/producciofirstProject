@@ -69,6 +69,9 @@ public class PlayerMovementLvl2 : MonoBehaviour
     // Referencia al objeto movible actualmente agarrado (si existe)
     private DraggableObject grabbedObject;
     private Collider2D playerCollider;
+    // Permite que AdvancedCameraFollow consulte si estamos planeando
+    public bool IsGliding => isGliding;
+
 
     void Awake()
     {
