@@ -14,7 +14,7 @@ public class MovimientoLateral : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
         // Verifica si el objeto con el que colisiona NO está en la capa "Player"
-        if (other.gameObject.layer != LayerMask.NameToLayer("Player"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("PlatformDetector"))
         {
             direccion *= -1;
         }
