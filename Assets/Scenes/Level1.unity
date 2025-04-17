@@ -12020,7 +12020,7 @@ GameObject:
   - component: {fileID: 646582222}
   - component: {fileID: 646582221}
   - component: {fileID: 646582220}
-  - component: {fileID: 646582219}
+  - component: {fileID: 646582224}
   m_Layer: 0
   m_Name: Circle
   m_TagString: Untagged
@@ -12028,19 +12028,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &646582219
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 646582218}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0ad07ad1d5b6df4aad008dab6b4daa7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 40
 --- !u!58 &646582220
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -12170,6 +12157,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &646582224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 646582218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcbd6042f599fb244878337984b25c76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 50
 --- !u!4 &648061658 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1191291812584181409, guid: dc58c6d9a44386547b6f2d1acb73e012, type: 3}
@@ -19617,7 +19617,7 @@ GameObject:
   m_Component:
   - component: {fileID: 888649541}
   - component: {fileID: 888649540}
-  - component: {fileID: 888649539}
+  - component: {fileID: 888649542}
   m_Layer: 0
   m_Name: RockSpawner
   m_TagString: Untagged
@@ -19625,22 +19625,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &888649539
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 888649538}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 607394da261d69c438f529cf75a15cee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rockObject:
-  - {fileID: 0}
-  spawnPoint: {fileID: 1903231040}
-  spawnDelay: 0
 --- !u!61 &888649540
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -19702,6 +19686,21 @@ Transform:
   - {fileID: 1903231040}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &888649542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 888649538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ce358b354079da44baa8823c7889544, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rockObject: {fileID: 646582218}
+  spawnPoint: {fileID: 1903231040}
+  spawnDelay: 2
 --- !u!4 &892567328 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2730719943268905404, guid: 65394cdcb27ed1c4881d1b73ebbc90c4, type: 3}
@@ -42348,11 +42347,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6252060457604224271, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -80.4
+      value: -77
       objectReference: {fileID: 0}
     - target: {fileID: 6252060457604224271, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -9.2
+      value: -6
       objectReference: {fileID: 0}
     - target: {fileID: 6252060457604224271, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
       propertyPath: m_LocalPosition.z
