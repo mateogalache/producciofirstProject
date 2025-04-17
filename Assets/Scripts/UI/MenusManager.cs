@@ -88,8 +88,8 @@ public class MenusManager: MonoBehaviour
         */
 
         if (Input.GetKeyDown(KeyCode.Escape)) ToggleMenu(menuPausaScene);
-        if (Input.GetKeyDown(KeyCode.LeftShift)) ToggleMenu(menuControlsScene);
-        if (Input.GetKeyDown(KeyCode.LeftControl)) ToggleMenu(menuHabilitatsScene);
+        if (Input.GetKeyDown(KeyCode.X)) ToggleMenu(menuControlsScene);
+        if (Input.GetKeyDown(KeyCode.Z)) ToggleMenu(menuHabilitatsScene);
 
     }
 
