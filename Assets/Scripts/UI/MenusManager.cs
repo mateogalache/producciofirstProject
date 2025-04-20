@@ -1,207 +1,162 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class MenusManager: MonoBehaviour
+public class MenusManager : MonoBehaviour
 {
-    // Nom escenes
-    [SerializeField] private string menuPausaScene = "PauseMenu";
-    [SerializeField] private string menuControlsScene = "ControlsMenu";
-    [SerializeField] private string menuHabilitatsScene = "HabilitiesMenu";
-    [SerializeField] private string menuPrincipalScene = "MainMenu";
-    [SerializeField] private string nivell1Scene = "Level1";
+    public static MenusManager Instance { get; private set; }
 
-    //private bool isPaused = false;
+    [Header("Roots de UI (arrástralos aquí)")]
+    [SerializeField] private GameObject levelUI;
+    [SerializeField] private GameObject pauseUI;
+    [SerializeField] private GameObject controlsUI;
+    [SerializeField] private GameObject abilitiesUI;
 
-    private string currentMenu = null; // Menu actual ober
-    private bool isMenuOpen = false;  // Si hi ha menu obert
+    [Header("Pause Menu Buttons")]
+    [SerializeField] private Button btnReturn;
+    [SerializeField] private Button btnSaveAndExit;
+    [SerializeField] private Button btnExitToMain;
 
-    private static MenusManager instance;
+
+    private enum MenuState { None, Pause, Controls, Abilities }
+    private MenuState currentState = MenuState.None;
 
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        } else
+        // Singleton
+        if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
-        }
-           
-    }
-
-    void Update()
-    {
-        /*
-        // Obrir men� de pausa amb la tecla Esc
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            if (currentMenu == menuPausaScene)
-            {
-                ReturnToGame();
-            }
-            else if (!isMenuOpen)
-            {
-                OpenMenu(menuPausaScene);
-                
-            }
-          
-        }
-
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            if (currentMenu == menuControlsScene)
-            {
-                ReturnToGame();
-            }
-            else if (!isMenuOpen)
-            {
-                OpenMenu(menuControlsScene);
-            }
-        }
-
-        // DownArrow: Abrir menú de habilidades / volver al juego
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            if (currentMenu == menuHabilitatsScene)
-            {
-                ReturnToGame();
-            }
-            else if (!isMenuOpen)
-            {
-                OpenMenu(menuHabilitatsScene);
-            }
-        }
-    }
-
-    // Carregar escena del men� seleccionat
-    private void OpenMenu(string nomMenu)
-    {
-        if (SceneManager.GetSceneByName(nomMenu).isLoaded)
             return;
+        }
+        Instance = this;
+        //DontDestroyOnLoad(gameObject);
 
-        SceneManager.LoadScene(nomMenu, LoadSceneMode.Additive); // Carregar el men� sobre el nivell actual
-        currentMenu = nomMenu;
-        isMenuOpen = true;
-        Time.timeScale = 0; // Pausar el joc
-        RemoveExtraAudioListeners();
-        */
-
-        if (Input.GetKeyDown(KeyCode.Escape)) ToggleMenu(menuPausaScene);
-        if (Input.GetKeyDown(KeyCode.X)) ToggleMenu(menuControlsScene);
-        if (Input.GetKeyDown(KeyCode.Z)) ToggleMenu(menuHabilitatsScene);
-
+        btnReturn.onClick.AddListener(CloseAll);
+        btnSaveAndExit.onClick.AddListener(SaveAndExit);
+        btnExitToMain.onClick.AddListener(ExitToMainMenu);
     }
 
-    private void ToggleMenu(string menuName)
+    private void Start()
     {
-        if (currentMenu == menuName)
-            ReturnToGame();
-        else if (!isMenuOpen)
-            //OpenMenu(menuName);
-            StartCoroutine(OpenMenu(menuName));
+        // Al arrancar, asegúrate de que levelUI, pauseUI, ... estén asignados
+        if (levelUI == null || pauseUI == null || controlsUI == null || abilitiesUI == null)
+        {
+            Debug.LogError("[MenusManager] Te falta arrastrar alguna UI Root en el Inspector");
+            enabled = false;
+            return;
+        }
+        CloseAll();
     }
 
-    private System.Collections.IEnumerator OpenMenu(string menuName)
+    /*
+    private void OnDestroy()
     {
-        //if (SceneManager.GetSceneByName(menuName).isLoaded)
-        //    return;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
 
-        //SceneManager.LoadScene(menuName, LoadSceneMode.Additive);
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
 
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(menuName, LoadSceneMode.Additive);
-
-        // Esperar hasta que se cargue completamente
-        while (!asyncLoad.isDone)
+        // Si volvemos al MainMenu, nos auto-destruimos
+        if (scene.name == "MainMenu")
         {
-            yield return null;
+            Destroy(gameObject);
+            return;
         }
 
-        Scene loadedScene = SceneManager.GetSceneByName(menuName);
-        if (loadedScene.IsValid())
-        {
-            SceneManager.SetActiveScene(loadedScene);
-        }
+        // 1) Buscamos en la jerarquía los roots de UI
+        levelUI = GameObject.Find("LevelUI");
+        pauseUI = GameObject.Find("PauseUI");
+        controlsUI = GameObject.Find("ControlsUI");
+        abilitiesUI = GameObject.Find("AbilitiesUI");
 
-        currentMenu = menuName;
-        isMenuOpen = true;
+        // 2) Ocultamos todo y dejamos solo la UI de juego
+        levelUI?.SetActive(true);
+        pauseUI?.SetActive(false);
+        controlsUI?.SetActive(false);
+        abilitiesUI?.SetActive(false);
+        currentState = MenuState.None;
+        Time.timeScale = 1;
+
+        // 3) Volvemos a conectar los botones
+        //    (btnReturn, btnSaveAndExit, btnExitToMain están
+        //     arrastrados en el Inspector una sola vez)
+        btnReturn.onClick.RemoveAllListeners();
+        btnReturn.onClick.AddListener(CloseAll);
+
+        btnSaveAndExit.onClick.RemoveAllListeners();
+        btnSaveAndExit.onClick.AddListener(SaveAndExit);
+
+        btnExitToMain.onClick.RemoveAllListeners();
+        btnExitToMain.onClick.AddListener(ExitToMainMenu);
+    }*/
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            Toggle(MenuState.Pause);
+
+        if (Input.GetKeyDown(KeyCode.X))
+            Toggle(MenuState.Controls);
+
+        if (Input.GetKeyDown(KeyCode.Z))
+            Toggle(MenuState.Abilities);
+    }
+
+    private void Toggle(MenuState target)
+    {
+        if (currentState == target)
+            CloseAll();
+        else
+            Open(target);
+    }
+
+    private void Open(MenuState target)
+    {
+        // primero oculta todo
+        levelUI.SetActive(false);
+        pauseUI.SetActive(false);
+        controlsUI.SetActive(false);
+        abilitiesUI.SetActive(false);
+
+        // Pausamos el juego
         Time.timeScale = 0;
-        RemoveExtraAudioListeners();
-        RemoveExtraEventSystems();
+        currentState = target;
 
-       
-    }
-
-    private void RemoveExtraEventSystems()
-    {
-        UnityEngine.EventSystems.EventSystem[] systems = FindObjectsOfType<UnityEngine.EventSystems.EventSystem>();
-
-        if (systems.Length > 1)
+        // Mostramos SOLO el que toque
+        switch (target)
         {
-            // Dejamos activo solo el primero
-            for (int i = 1; i < systems.Length; i++)
-            {
-                systems[i].gameObject.SetActive(false);
-            }
+            case MenuState.Pause: if (pauseUI) pauseUI.SetActive(true); break;
+            case MenuState.Controls: if (controlsUI) controlsUI.SetActive(true); break;
+            case MenuState.Abilities: if (abilitiesUI) abilitiesUI.SetActive(true); break;
         }
     }
 
-    // Tornar al joc
-    public void CloseMenu()
+    private void CloseAll()
     {
-        if (currentMenu != null) {
-             SceneManager.UnloadSceneAsync(currentMenu); // Tanca el men� actual
-            currentMenu = null;
-        }
-        isMenuOpen = false;
-        Time.timeScale = 1; //reanudar temps de joc
-       
+        // cierra todo y reanuda
+        pauseUI.SetActive(false);
+        controlsUI.SetActive(false);
+        abilitiesUI.SetActive(false);
+        levelUI.SetActive(true);
+
+
+        if (levelUI) levelUI.SetActive(true);
+
+        Time.timeScale = 1;
+        currentState = MenuState.None;
     }
 
+    // Este método lo enlazas con tu botón “Return to Game”
+    public void ReturnToGame() => CloseAll();
+
+    // Guardar y salir, o salir al menú principal
     public void SaveAndExit()
     {
-
-        Debug.Log("SaveAndExit presionado");
-
-        // Tornar al menu principal
-        Time.timeScale = 1; // Reanudar temps
-        SceneManager.LoadScene(menuPrincipalScene); // Carregar men� principal
-    }
-
-    // Sortir al men� principal
-    public void ExitToMainMenu()
-    {
-        Debug.Log("ExitToMainMenu presionado");
-        Time.timeScale = 1; // Reanudar temps
-        SceneManager.LoadScene(menuPrincipalScene); // Carregar men� principal
-    }
-
-    // Tornar al nivell 1
-    public void ReturnToGame()
-    {
-        //Time.timeScale = 1; // Reanudar temps
-        //SceneManager.LoadScene(nivell1Scene); // Carregar el nivell 1 (Sample Scene)
-
-        Debug.Log("ReturnToGame presionado");
         Time.timeScale = 1;
-        CloseMenu();
-        //SceneManager.LoadScene(nivell1Scene);
+        SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
     }
-
-    private void RemoveExtraAudioListeners()
-    {
-        AudioListener[] listeners = FindObjectsOfType<AudioListener>();
-
-        if (listeners.Length > 1)
-        {
-            //Debug.LogWarning("Se detectaron múltiples AudioListeners. Desactivando los adicionales.");
-
-            for (int i = 1; i < listeners.Length; i++)
-            {
-                listeners[i].enabled = false; // En lugar de destruirlos, los desactivamos
-            }
-        } 
-    }
-
-
+    public void ExitToMainMenu() => SaveAndExit();
 }

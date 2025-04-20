@@ -10,6 +10,10 @@ TagManager:
   - UpDetector
   - PlatformDetector
   - DashObject
+  - LevelUI
+  - PauseMenuUI
+  - ControlsUI
+  - AbilitiesUI
   layers:
   - Default
   - TransparentFX

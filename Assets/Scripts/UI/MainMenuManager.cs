@@ -2,58 +2,50 @@
 //using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
 {
+    [Header("Botones del menú")]
+    [SerializeField] private Button newGameButton;
+    [SerializeField] private Button continueButton;
+    [SerializeField] private Button exitButton;
 
-   //Carreguem escena segons nom
-   public void LoadScene (string sceneName) {
-       SceneManager.LoadScene(sceneName);
-   }
-
-    public void StartNewGame()
+    private void Start()
     {
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.StartNewGame(); // Llama a la función para comenzar un nuevo juego
-        }
-        else
-        {
-            Debug.LogError("GameManager no está disponible.");
-            SceneManager.LoadScene("Level1");
-        }
-       
+        newGameButton.onClick.AddListener(OnNewGameClicked);
+        continueButton.onClick.AddListener(OnContinueClicked);
+        exitButton.onClick.AddListener(OnExitClicked);
+
+        continueButton.interactable = GameManager.Instance != null
+                                 && GameManager.Instance.HasSavedProgress();
+
     }
 
-
-    //Tancar joc
-    public void ExitGame() {
-       Debug.Log("Exiting the game...");
-       #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false; // para el modo play en l'editor'
-        #else
-            Application.Quit(); // Tanca aplicació fora de l'editor'
-        #endif
-   }
-
-    public void ContinueGame()
+    public void OnNewGameClicked()
     {
         if (GameManager.Instance != null)
-        {
-            if (GameManager.Instance.HasSavedProgress())
-            {
-                GameManager.Instance.RestartLevel(); // Si hay progreso guardado, continúa desde el checkpoint
-            }
-            else
-            {
-                Debug.Log("No hay progreso guardado. Comienza un nuevo juego.");
-                StartNewGame(); // Si no hay progreso, se inicia un nuevo juego
-            }
-        }
+            GameManager.Instance.StartNewGame();
         else
-        {
-            Debug.LogError("GameManager no está disponible.");
-        }
+            SceneManager.LoadScene("Level1", LoadSceneMode.Single);
+    }
+
+    public void OnContinueClicked()
+    {
+        if (GameManager.Instance != null && GameManager.Instance.HasSavedProgress())
+            GameManager.Instance.RestartLevel();
+        else
+            OnNewGameClicked();
+    }
+
+    public void OnExitClicked()
+    {
+        // En build: cierra aplicación; en editor: para el Play
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 
 }
