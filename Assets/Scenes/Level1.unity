@@ -45791,6 +45791,42 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3311619238481717239, guid: 33c041972fdb7ad4da479c2d84868afe, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944653321605109559, guid: 33c041972fdb7ad4da479c2d84868afe, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944653321605109559, guid: 33c041972fdb7ad4da479c2d84868afe, type: 3}
+      propertyPath: m_Pivot.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944653321605109559, guid: 33c041972fdb7ad4da479c2d84868afe, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944653321605109559, guid: 33c041972fdb7ad4da479c2d84868afe, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944653321605109559, guid: 33c041972fdb7ad4da479c2d84868afe, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944653321605109559, guid: 33c041972fdb7ad4da479c2d84868afe, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944653321605109559, guid: 33c041972fdb7ad4da479c2d84868afe, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 56
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944653321605109559, guid: 33c041972fdb7ad4da479c2d84868afe, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 558.9
+      objectReference: {fileID: 0}
     - target: {fileID: 4770513383058834197, guid: 33c041972fdb7ad4da479c2d84868afe, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -45851,6 +45887,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 9032898685772837731, guid: 33c041972fdb7ad4da479c2d84868afe, type: 3}
+      propertyPath: linePrefab
+      value: 
+      objectReference: {fileID: 8073364678486433119, guid: eb7f037c2e1c56943add2638a547aaba, type: 3}
     m_RemovedComponents:
     - {fileID: 2376743840635568406, guid: 33c041972fdb7ad4da479c2d84868afe, type: 3}
     m_RemovedGameObjects:

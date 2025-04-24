@@ -16,6 +16,10 @@ public class StarUIManager : MonoBehaviour
     [Tooltip("Prefab de la estrella para la UI")]
     public GameObject starUIPrefab;
 
+    [Header("Line")]
+    public GameObject linePrefab;
+    private List<GameObject> lines = new List<GameObject>();
+
     [Header("Audio")]
     [Tooltip("Clip de audio que se reproducirá al recolectar una estrella")]
     public AudioClip collectSound;
@@ -55,27 +59,28 @@ public class StarUIManager : MonoBehaviour
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
+
         centerScreen = new Vector3(Screen.width / 2, Screen.height / 2, 0);
 
-        //if (lineRenderer == null)
-        //{
-        //    lineRenderer = gameObject.AddComponent<LineRenderer>();
-        //}
+        GridLayoutGroup grid = starContainer.GetComponent<GridLayoutGroup>();
+        if (grid != null)
+        {
+            grid.cellSize = new Vector2(30, 30);
+            grid.spacing = new Vector2(5, 5);
+            grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            grid.constraintCount = 7;
+        }
 
-        //targetPositions = GetTargetPositionsForAndy(); // Guardamos las posiciones finales de la animación
+        RectTransform containerRect = starContainer.GetComponent<RectTransform>();
 
-        //lineRenderer.useWorldSpace = true;
-        //lineRenderer.startWidth = 2.0f;
-        //lineRenderer.endWidth = 2.0f;
-        //lineRenderer.material = new Material(Shader.Find("Unlit/Color"));
-        //lineRenderer.material.color = Color.white;
-        //lineRenderer.enabled = false;
+        containerRect.anchorMin = new Vector2(0f, 1f);
+        containerRect.anchorMax = new Vector2(0f, 1f);
+        containerRect.pivot = new Vector2(0f, 1f);
+        //containerRect.anchoredPosition = new Vector2(20,-20);
+        //containerRect.sizeDelta = new Vector2(350, 100);
+        containerRect.anchoredPosition = new Vector2(30f, -30f); // ¡OJO! Y es negativo porque el pivot es top-left
+        containerRect.sizeDelta = new Vector2(300f, 100f);
 
-        /////////////////////
-        ///lineRenderer.positionCount = 2;
-        //lineRenderer.SetPosition(0, new Vector3(0, 0, -1f));
-        //lineRenderer.SetPosition(1, new Vector3(300, 300, -1f));
-        //lineRenderer.enabled = true;
 
     }
 
@@ -86,6 +91,7 @@ public class StarUIManager : MonoBehaviour
     public void AddStar(Vector3 worldPosition)
     {
         starCount++;
+        Debug.Log($"Estrella añadida. Total recogidas: {starCount}/{maxStars}");
         UpdateStarUI();
 
         // Reproducir sonido de recolección
@@ -98,6 +104,9 @@ public class StarUIManager : MonoBehaviour
         if (starCount >= maxStars)
         {
             Debug.Log("Se han recogido todas las estrellas. Inicia animación.");
+            GridLayoutGroup grid = starContainer.GetComponent<GridLayoutGroup>();
+            if (grid != null)
+                Destroy(grid);
             animateStars = true; 
         }
     }
@@ -110,6 +119,10 @@ public class StarUIManager : MonoBehaviour
         if (starContainer != null && starUIPrefab != null)
         {
             GameObject newStar = Instantiate(starUIPrefab, starContainer);
+            RectTransform starRect = newStar.GetComponent<RectTransform>();
+            //starRect.anchoredPosition = Vector2.zero; // o la posición inicial que quieras
+            starRect.localScale = Vector3.one * 1.5f;
+            starRect.anchoredPosition = Vector2.zero;
             collectedStars.Add(newStar);
         }
         else
@@ -145,10 +158,23 @@ public class StarUIManager : MonoBehaviour
             GameObject star = collectedStars[i];
             Vector3 targetPos = targetPositions[i];
             float step = 300f * Time.deltaTime;
-            star.transform.position = Vector3.MoveTowards(star.transform.position, targetPos, step);
+            //star.transform.position = Vector3.MoveTowards(star.transform.position, targetPos, step);
+            RectTransform starRect = star.GetComponent<RectTransform>();
+            starRect.anchoredPosition = Vector2.MoveTowards(starRect.anchoredPosition, targetPos, step);
 
-            if (star.transform.position != targetPositions[i])
+            //if (star.transform.position != targetPositions[i])
+            //    allArrived = false;
+            //float distance = Vector3.Distance(star.transform.position, targetPositions[i]);
+            float distance = Vector2.Distance(starRect.anchoredPosition, targetPositions[i]);
+            if (distance > 0.1f)
+            {
                 allArrived = false;
+                Debug.Log($"Estrella {i} aún no ha llegado. Distancia restante: {distance}");
+            }
+            else
+            {
+                Debug.Log($"Estrella {i} ha llegado al destino.");
+            }
 
         }
 
@@ -163,141 +189,159 @@ public class StarUIManager : MonoBehaviour
 
     private void DrawLines()
     {
+
         if (collectedStars.Count < maxStars)
         {
+            Debug.Log("Aún no hay suficientes estrellas. Se necesitan " + maxStars);
             return;
         }
 
         // Definir los índices de las estrellas que forman cada letra
-        int[][] letterIndices = new int[][]
+        int[][] connections = new int[][]
         {
 
-            new int[] { 0, 1, 2, 0 }, //A
 
-            //N
-            new int[] { 3, 4 }, // Vertical izquierda
-            new int[] { 4, 5 }, // Diagonal
-            new int[] { 5, 6 },
-
-            //D
-            new int[] { 7, 8 }, // Vertical
-            new int[] { 8, 9 }, // Diagonal superior
-            new int[] { 9, 7 }, // Diagonal inferior cerrando forma curva
-
-            //Y
-            new int[] { 10, 12 }, // Diagonal izquierda
-            new int[] { 11, 12 }, // Diagonal derecha
-            new int[] { 12, 13 }, // Vertical central
+            new int[] {0, 1}, new int[] {1, 2}, // A
+            new int[] {3, 4}, new int[] {4, 5}, new int[] {5, 6}, // N
+            new int[] {7, 8}, new int[] {8, 9}, new int[] {9, 7}, // D
+            new int[] {10, 12}, new int[] {11, 12}, new int[] {12, 13}, // Y
         };
 
-        Canvas canvas = starContainer.GetComponentInParent<Canvas>();
-        Camera cam = Camera.main;
-
-
-        // Crear un LineRenderer para cada letra
-        foreach (var indices in letterIndices)
+        foreach (var pair in connections)
         {
+            if (pair.Length != 2) continue;
 
-            if (indices.Length == 0 || indices[indices.Length - 1] >= collectedStars.Count)
-            {
-                continue; // Evitar accesos fuera de rango
-            }
-
-            GameObject lineObject = new GameObject("LetterLine");
-            LineRenderer letterLine = lineObject.AddComponent<LineRenderer>();
-            //LineRenderer letterLine = new GameObject("LetterLine").AddComponent<LineRenderer>();
-
-            letterLine.useWorldSpace = true;
-            letterLine.startWidth = 2f;
-            letterLine.endWidth = 2f;
-            //letterLine.material = new Material(Shader.Find("Unlit/Color"));
-            //letterLine.material.color = Color.white;
-            letterLine.material = new Material(Shader.Find("Sprites/Default"));
-            letterLine.positionCount = indices.Length;
-            //letterLine.sortingLayerName = "Default";
-            //letterLine.sortingOrder = 100;
-            letterLine.sortingOrder = 10;
-
-           
-            for (int i = 0; i < indices.Length; i++)
-            {
-                int index = indices[i];
-
-                if (index >= collectedStars.Count) continue; // Seguridad
-
-                Vector3 uiPosition = collectedStars[index].GetComponent<RectTransform>().position;
-
-                //Vector3 worldPos = collectedStars[index].transform.position;
-                Vector3 worldPos;
-
-                if (canvas.renderMode == RenderMode.WorldSpace)
-                {
-                    //worldPos = cam.ScreenToWorldPoint(new Vector3(uiPosition.x, uiPosition.y, 10f)); // Ajusta Z si es necesario
-                    worldPos = collectedStars[index].transform.position;
-                } else
-                {
-                    Vector3 uiPos = collectedStars[index].GetComponent<RectTransform>().position;
-                    worldPos = cam.ScreenToWorldPoint(new Vector3(uiPos.x, uiPos.y, 10f));
-                }
-                    /*
-                    if (starContainer != null && starContainer.GetComponentInParent<Canvas>() != null)
-                    {
-                        worldPos = Camera.main.ScreenToWorldPoint(new Vector3(worldPos.x, worldPos.y, Camera.main.nearClipPlane));
-                        worldPos.z = 0;
-                    }
-                    */
-                worldPos.z = 0f;
-                letterLine.SetPosition(i, worldPos);
-
-                // Si el canvas es World Space, no necesitas convertir nada
-                //worldPos = collectedStars[index].transform.position;
+            GameObject startStar = collectedStars[pair[0]];
+            GameObject endStar = collectedStars[pair[1]];
 
 
-                //letterLine.SetPosition(i, worldPos);
-                //Debug.DrawLine(worldPos, worldPos + Vector3.up * 10f, Color.red, 2f);
-            
-            }
-            letterLine.enabled = true;
+            //Vector2 startPos = startStar.GetComponent<RectTransform>().anchoredPosition;
+            //Vector2 endPos = endStar.GetComponent<RectTransform>().anchoredPosition;
+            Vector2 startPos = startStar.GetComponent<RectTransform>().localPosition;
+            Vector2 endPos = endStar.GetComponent<RectTransform>().localPosition;
 
+
+            CreateUILine(startPos, endPos);
         }
 
+
     }
+
+    private void CreateUILine(Vector3 start, Vector3 end)
+    {
+        GameObject line = Instantiate(linePrefab, starContainer); // Dentro del canvas
+        RectTransform rect = line.GetComponent<RectTransform>();
+
+        //rect.sizeDelta = new Vector2(6f, length); // grosor, largo
+        //rect.pivot = new Vector2(0.5f, 0f);
+        //rect.position = start;
+        //rect.rotation = Quaternion.FromToRotation(Vector3.up, dir);
+
+        line.transform.SetParent(starContainer, false); // mantiene escala y posicionamiento local
+        line.transform.SetAsLastSibling(); // asegura que la línea se dibuje por encima
+
+        Vector3 dir = end - start;
+        float length = dir.magnitude;
+
+        // Ajustes visuales
+        rect.sizeDelta = new Vector2(6f, length); // ancho y largo de la línea
+        rect.pivot = new Vector2(0.5f, 0f);
+
+        // Ajuste de posición dentro del Canvas
+        //Vector3 localStart = starContainer.InverseTransformPoint(start);
+        //rect.localPosition = localStart;
+
+        //Vector2 anchoredStart = start;
+        //rect.anchoredPosition = anchoredStart;
+
+        rect.localPosition = start;
+
+        //Debug.Log($"Línea creada desde: {start} hasta: {end} | Largo: {length}");
+        //rect.rotation = Quaternion.FromToRotation(Vector3.up, dir);
+        rect.localRotation = Quaternion.FromToRotation(Vector3.up, dir.normalized);
+
+        lines.Add(line);
+
+        
+        Image img = line.GetComponent<Image>();
+        if (img != null)
+        {
+            img.enabled = true;
+            img.color = Color.white;
+        }
+        Debug.Log("Creating line at: " + start);
+        
+    }
+
 
     //defineix totes les posicions in cada estrella ha de moure's per formar la paraula
     private Vector3[] GetTargetPositionsForAndy()
     {
-        float startX = Screen.width / 3;
-        float startY = Screen.height / 2;
+
+        /*
+        RectTransform canvasRect = starContainer.GetComponentInParent<Canvas>().GetComponent<RectTransform>();
+
+        float centerX = canvasRect.rect.width / 2f;
+        float centerY = canvasRect.rect.height / 2f;
+
+        float offsetX = 500f;
+
+
 
         return new Vector3[]
         {
-            
-             new Vector3(startX, startY, 0), 
-            new Vector3(startX + 20, startY + 40, 0),
-            new Vector3(startX + 40, startY, 0),
+        // A
+        new Vector3(-140 + offsetX, -20),
+        new Vector3(-120 + offsetX,  20),
+        new Vector3(-100 + offsetX, -20), 
 
-            // N - Estrellas formando una línea vertical, diagonal y vertical
-            new Vector3(startX + 80, startY, 0), // Estrella 1 (vertical)
-            new Vector3(startX + 80, startY + 40, 0), // Estrella 2 (vertical)
-            new Vector3(startX + 120, startY, 0), // Estrella 3 (diagonal)
-            new Vector3(startX + 120, startY + 40, 0), // Estrella 4 (diagonal)            
-            
+        // N
+        new Vector3(-60 + offsetX, -20),
+        new Vector3(-60 + offsetX, 20),
+        new Vector3(-20 + offsetX, -20),
+        new Vector3(-20 + offsetX, 20), 
 
-            // D - Triángulo horizontal con una estrella central
-            new Vector3(startX + 160, startY, 0), // Estrella 1 (izquierda)
-            new Vector3(startX + 160, startY + 40, 0), // Estrella 2 (derecha)
-            new Vector3(startX + 200, startY + 20, 0), // Estrella 3 (punta superior)
+        // D
+        new Vector3(20 + offsetX, -20),
+        new Vector3(20 + offsetX, 20),
+        new Vector3(60 + offsetX, 0), 
 
-            // Y - Triángulo boca abajo y un palo vertical
-            new Vector3(startX + 240, startY + 40, 0), // Estrella 1 (parte superior izquierda)
-            new Vector3(startX + 280, startY + 40, 0), // Estrella 2 (parte superior derecha)
-            new Vector3(startX + 260, startY + 20, 0), // Estrella 3 (parte inferior)
-            new Vector3(startX + 260, startY, 0), // Estrella 4 (palo de la Y)
-            
- 
+        // Y
+        new Vector3(100 + offsetX, 20),
+        new Vector3(140 + offsetX, 20),
+        new Vector3(120 + offsetX, 0),
+        new Vector3(120 + offsetX, -20)
+        };*/
 
+        RectTransform containerRect = starContainer.GetComponent<RectTransform>();
+
+        float containerWidth = containerRect.rect.width;
+        float containerHeight = containerRect.rect.height;
+
+        Vector2 containerCenter = new Vector2(containerWidth / 2f, -containerHeight / 2f); // Y negativo porque pivot es top-left
+
+        // Posiciones relativas al centro del contenedor para formar la palabra "ANDY"
+        Vector3[] positions = new Vector3[]
+        {
+        // A
+        new Vector3(-140, -20), new Vector3(-120, 20), new Vector3(-100, -20),
+
+        // N
+        new Vector3(-60, -20), new Vector3(-60, 20), new Vector3(-20, -20), new Vector3(-20, 20),
+
+        // D
+        new Vector3(20, -20), new Vector3(20, 20), new Vector3(60, 0),
+
+        // Y
+        new Vector3(100, 20), new Vector3(140, 20), new Vector3(120, 0), new Vector3(120, -20)
         };
 
+        for (int i = 0; i < positions.Length; i++)
+        {
+            positions[i] += (Vector3)containerCenter;
+        }
+
+        return positions;
     }
 
 }
