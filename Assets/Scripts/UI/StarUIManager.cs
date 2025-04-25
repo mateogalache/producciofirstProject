@@ -25,10 +25,10 @@ public class StarUIManager : MonoBehaviour
     public AudioClip collectSound;
 
     private AudioSource audioSource;
-    private int starCount = 0; 
-    private int maxStars = 14; 
+    private int starCount = 0;
+    private int maxStars = 14;
 
-    private List<GameObject> collectedStars = new List<GameObject>(); 
+    private List<GameObject> collectedStars = new List<GameObject>();
     private Vector3[] targetPositions;
     private bool animateStars = false;
 
@@ -38,11 +38,11 @@ public class StarUIManager : MonoBehaviour
 
     void Awake()
     {
-        
+
         if (Instance == null)
         {
             Instance = this;
-            
+
         }
         else
         {
@@ -78,7 +78,7 @@ public class StarUIManager : MonoBehaviour
         containerRect.pivot = new Vector2(0f, 1f);
         //containerRect.anchoredPosition = new Vector2(20,-20);
         //containerRect.sizeDelta = new Vector2(350, 100);
-        containerRect.anchoredPosition = new Vector2(30f, -30f); // ¡OJO! Y es negativo porque el pivot es top-left
+        containerRect.anchoredPosition = new Vector2(10f, -10f); // ¡OJO! Y es negativo porque el pivot es top-left
         containerRect.sizeDelta = new Vector2(300f, 100f);
 
 
@@ -107,7 +107,7 @@ public class StarUIManager : MonoBehaviour
             GridLayoutGroup grid = starContainer.GetComponent<GridLayoutGroup>();
             if (grid != null)
                 Destroy(grid);
-            animateStars = true; 
+            animateStars = true;
         }
     }
 
@@ -121,7 +121,7 @@ public class StarUIManager : MonoBehaviour
             GameObject newStar = Instantiate(starUIPrefab, starContainer);
             RectTransform starRect = newStar.GetComponent<RectTransform>();
             //starRect.anchoredPosition = Vector2.zero; // o la posición inicial que quieras
-            starRect.localScale = Vector3.one * 1.5f;
+            starRect.localScale = Vector3.one * 1f;
             starRect.anchoredPosition = Vector2.zero;
             collectedStars.Add(newStar);
         }
@@ -144,7 +144,7 @@ public class StarUIManager : MonoBehaviour
         if (animateStars)
         {
             MoveStarsToFormName();
-            
+
         }
     }
 
@@ -262,7 +262,7 @@ public class StarUIManager : MonoBehaviour
 
         lines.Add(line);
 
-        
+
         Image img = line.GetComponent<Image>();
         if (img != null)
         {
@@ -270,7 +270,7 @@ public class StarUIManager : MonoBehaviour
             img.color = Color.white;
         }
         Debug.Log("Creating line at: " + start);
-        
+
     }
 
 

@@ -45887,6 +45887,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 7164516147989615712, guid: 33c041972fdb7ad4da479c2d84868afe, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -77.8
+      objectReference: {fileID: 0}
     - target: {fileID: 9032898685772837731, guid: 33c041972fdb7ad4da479c2d84868afe, type: 3}
       propertyPath: linePrefab
       value: 
