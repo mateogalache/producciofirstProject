@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/PauseMenu.unity
     guid: c999f83a82fa4d9448988bf00883646c
+  - enabled: 1
+    path: Assets/Scenes/Mirror.unity
+    guid: d09d0e4e63a59994d8ef14afcc47d9eb
   m_configObjects: {}

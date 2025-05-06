@@ -23,7 +23,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpCarryMultiplier = 0.8f;
 
     [Header("Drag Settings")]
-    [SerializeField] private Transform grabPoint;
+    [SerializeField] private Transform grabPointR;
+    [SerializeField] private Transform grabPointL;
     [SerializeField] private float grabRadius = 1f;
     [SerializeField] private LayerMask draggableLayer;
 
@@ -50,6 +51,7 @@ public class PlayerMovement : MonoBehaviour
     private bool enabledMovement = true;
 
     private DraggableObject grabbedObject;
+    public SpriteRenderer body;
 
     void Awake()
     {
@@ -195,9 +197,10 @@ public class PlayerMovement : MonoBehaviour
     private void Flip()
     {
         isFacingRight = !isFacingRight;
-        Vector3 scale = transform.localScale;
-        scale.x *= -1;
-        transform.localScale = scale;
+        //Vector3 scale = transform.localScale;
+        //scale.x *= -1;
+        body.flipX = !body.flipX;
+        //transform.localScale = scale;
     }
 
     private void UpdateAnimations()
@@ -258,7 +261,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void TryGrab()
     {
-        if (grabPoint == null) return;
+
+        Transform grabPoint = IsFacingRight ? grabPointR : grabPointL;
 
         Collider2D[] hits = Physics2D.OverlapCircleAll(grabPoint.position, grabRadius, draggableLayer);
         if (hits.Length == 0) return;
@@ -270,7 +274,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 grabbedObject = dObj;
                 grabbedObject.Grab(grabPoint);
-                Physics2D.IgnoreCollision(playerCollider, col, true);
+                //Physics2D.IgnoreCollision(playerCollider, col, true);
                 return;
             }
         }
@@ -283,7 +287,7 @@ public class PlayerMovement : MonoBehaviour
             Collider2D boxCollider = grabbedObject.GetComponent<Collider2D>();
             if (playerCollider != null && boxCollider != null)
             {
-                StartCoroutine(ReenableCollisionAfterDelay(playerCollider, boxCollider));
+                //StartCoroutine(ReenableCollisionAfterDelay(playerCollider, boxCollider));
             }
             grabbedObject.Release();
             grabbedObject = null;
@@ -312,10 +316,10 @@ public class PlayerMovement : MonoBehaviour
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
-        if (grabPoint != null)
+        if (grabPointR != null)
         {
             Gizmos.color = Color.blue;
-            Gizmos.DrawWireSphere(grabPoint.position, grabRadius);
+            Gizmos.DrawWireSphere(grabPointR.position, grabRadius);
         }
     }
     #endregion

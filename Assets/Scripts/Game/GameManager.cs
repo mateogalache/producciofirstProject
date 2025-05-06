@@ -122,4 +122,5 @@ public class GameManager : MonoBehaviour
         Debug.Log("Juego reseteado");
         SceneManager.LoadScene("Level1", LoadSceneMode.Single);
     }
+
 }

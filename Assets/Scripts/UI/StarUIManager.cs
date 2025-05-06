@@ -35,7 +35,6 @@ public class StarUIManager : MonoBehaviour
     private Vector3 centerScreen;
 
     //private LineRenderer lineRenderer;
-
     void Awake()
     {
 
@@ -184,8 +183,11 @@ public class StarUIManager : MonoBehaviour
             animateStars = false;
             Invoke("DrawLines", 0.1f); // Dibuja las líneas una sola vez después de que las estrellas lleguen
             //DrawLines();// Solo dibujamos las líneas cuando todas las estrellas están en su lugar
+            SceneManager.LoadScene("Mirror");
+
         }
     }
+
 
     private void DrawLines()
     {
