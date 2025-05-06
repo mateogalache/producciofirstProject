@@ -1,34 +1,44 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class DraggableObject : MonoBehaviour
 {
     private Rigidbody2D rb;
-    private Transform originalParent;
+    private Transform targetPoint; 
+    private bool isBeingCarried = false;
+
+    [Header("Grab settings")]
+    [SerializeField] private float followSpeed = 10f;     
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    /// <summary>
-    /// Called by the player when grabbing this object.
-    /// </summary>
-    /// <param name="newParent">The transform (usually the player's grab point) to attach to.</param>
-    public void Grab(Transform newParent)
+    void FixedUpdate()
     {
-        // Save the original parent in case you need to restore it
-        originalParent = transform.parent;
-        transform.SetParent(newParent);
-        transform.localPosition = Vector3.zero; // Snap the object to the grab point
-        rb.isKinematic = true; // Disable physics while being carried
+        if (isBeingCarried && targetPoint != null)
+        {
+            Vector2 newPos = Vector2.Lerp(rb.position, targetPoint.position, followSpeed * Time.fixedDeltaTime);
+            rb.MovePosition(newPos);
+        }
     }
 
     /// <summary>
-    /// Called by the player when releasing this object.
+    /// Inicia el agarre del objeto.
+    /// </summary>
+    public void Grab(Transform followTarget)
+    {
+        targetPoint = followTarget;
+        isBeingCarried = true;
+    }
+
+    /// <summary>
+    /// Suelta el objeto.
     /// </summary>
     public void Release()
     {
-        transform.SetParent(originalParent);
-        rb.isKinematic = false; // Re-enable physics
+        isBeingCarried = false;
+        targetPoint = null;
     }
 }
