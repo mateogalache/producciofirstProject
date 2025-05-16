@@ -76,6 +76,7 @@ public class MoveToTrigger : MonoBehaviour
     {
         if (other.CompareTag("Mirror"))
         {
+            Debug.Log("Absorción en espiral iniciada.");
             isMoving = false;
             isBeingAbsorbed = true;
             mirrorTransform = other.transform;
@@ -84,7 +85,7 @@ public class MoveToTrigger : MonoBehaviour
             Vector3 dir = transform.position - mirrorTransform.position;
             orbitAngle = Mathf.Atan2(dir.y, dir.x);
 
-            Debug.Log("Absorción en espiral iniciada.");
+            
         }
     }
 }
