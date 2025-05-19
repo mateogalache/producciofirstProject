@@ -16,6 +16,8 @@ TagManager:
   - AbilitiesUI
   - Mirror
   - Ascensor
+  - PressurePanel
+  - PressureText
   layers:
   - Default
   - TransparentFX
