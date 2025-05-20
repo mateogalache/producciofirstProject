@@ -6,7 +6,7 @@ using TMPro;
 public class PressureEntityController : MonoBehaviour
 {
     [Header("UI")]
-    public GameObject uiMessagePanel; 
+    public GameObject uiMessagePanel;
     public TextMeshProUGUI messageText;
 
     [Header("Mensajes por defecto")]
@@ -79,9 +79,20 @@ public class PressureEntityController : MonoBehaviour
 
         transform.position = position;
         //particles.Clear(true);
-        particles.transform.position = position;
-        particles.Play();
 
+
+        if (particles != null)
+        {
+            particles.transform.position = position;
+            particles.Play();
+        }
+
+        float delayBeforeText = 1.5f;
+        CancelInvoke(nameof(ShowMessage));
+        Invoke(nameof(ShowMessage), delayBeforeText);
+    }
+
+    /*
         if (uiMessagePanel != null && pressureMessages.Length > 0)
         {
             string msg = pressureMessages[currentMessage % pressureMessages.Length];
@@ -96,6 +107,21 @@ public class PressureEntityController : MonoBehaviour
 
             //CancelInvoke(nameof(HideMessage));
             //Invoke(nameof(HideMessage), displayDuration);
+        }
+    }*/
+
+    private void ShowMessage()
+    {
+        if (uiMessagePanel != null && pressureMessages.Length > 0)
+        {
+            string msg = pressureMessages[currentMessage % pressureMessages.Length];
+            uiMessagePanel.SetActive(true);
+            messageText.text = msg;
+            currentMessage++;
+
+            float duration = displayDuration;
+            CancelInvoke(nameof(HideMessage));
+            Invoke(nameof(HideMessage), duration);
         }
     }
 
