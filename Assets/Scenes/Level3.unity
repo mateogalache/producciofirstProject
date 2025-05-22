@@ -13599,6 +13599,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2127038867}
     - target: {fileID: 918266069729297346, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 918266069729297346, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
       propertyPath: dashComponent
       value: 
       objectReference: {fileID: 2127038849}
@@ -13656,6 +13660,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6563151940194626701, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2127038860}
+    - targetCorrespondingSourceObject: {fileID: 6563151940194626701, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2127038868}
   m_SourcePrefab: {fileID: 100100000, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
 --- !u!1001 &868158111
 PrefabInstance:
@@ -27748,6 +27755,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1863572562 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2765107238563719072, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
+  m_PrefabInstance: {fileID: 864960634}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1887846014
 GameObject:
   m_ObjectHideFlags: 0
@@ -31008,6 +31020,45 @@ SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 7700684573295877210, guid: cfc1bbc37e0e8884890cdab5d4ab07e2, type: 3}
   m_PrefabInstance: {fileID: 864960634}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2127038868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2127038838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f05b6c70ec41114996dc675c600eea0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 35
+  accelerationTime: 0.4
+  decelerationTime: 0.02
+  jumpForce: 25
+  gravityScale: 6
+  groundCheck: {fileID: 1863572562}
+  groundCheckRadius: 0.2
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  coyoteTime: 0.2
+  jumpBufferTime: 0.2
+  jumpCarryMultiplier: 0.8
+  grabPoint: {fileID: 0}
+  grabRadius: 1
+  draggableLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  glideGravityScale: 0.5
+  maxGlideFallSpeed: -2
+  glideSpeedMultiplier: 1.5
+  wallCheckDistance: 0.5
+  wallCheckRadius: 0.2
+  wallLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  wallJumpForce: {x: 10, y: 20}
 --- !u!1 &2144394922
 GameObject:
   m_ObjectHideFlags: 0
