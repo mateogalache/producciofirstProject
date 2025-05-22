@@ -11,28 +11,14 @@ public class PressureEntityController : MonoBehaviour
 
     [Header("Mensajes por defecto")]
     public string[] pressureMessages;
-    public float displayDuration = 10f;
+    public float displayDuration = 4f;
 
     public ParticleSystem particles;
     private int currentMessage = 0;
 
     private void Awake()
     {
-        /*
-        particles = GetComponentInChildren<ParticleSystem>();
-        if (particles == null)
-            Debug.LogError("[PressureEntity] ¡No encontré el ParticleSystem en los hijos!");
-
-        var main = particles.main;
-        main.loop = true;
-
-        particles.Stop();
-
-        if (uiMessagePanel != null)
-        {
-            uiMessagePanel.SetActive(false);
-        }*/
-        // 1) Buscar el panel si no está asignado
+        
         if (uiMessagePanel == null)
         {
             uiMessagePanel = GameObject.FindWithTag("PressurePanel");
@@ -41,7 +27,7 @@ public class PressureEntityController : MonoBehaviour
                 Debug.LogError("[PressureEntity] No encontré ningún objeto con tag 'PressurePanel'");
         }
 
-        // 2) Buscar el TMP Text dentro del panel si no está asignado
+      
         if (messageText == null && uiMessagePanel != null)
         {
             messageText = uiMessagePanel.GetComponentInChildren<TextMeshProUGUI>();
@@ -49,7 +35,7 @@ public class PressureEntityController : MonoBehaviour
                 Debug.LogError("[PressureEntity] No encontré TextMeshProUGUI dentro del panel");
         }
 
-        // 3) Configurar ParticleSystem
+    
         if (particles == null)
             particles = GetComponentInChildren<ParticleSystem>();
 
@@ -58,9 +44,9 @@ public class PressureEntityController : MonoBehaviour
 
         var main = particles.main;
         main.loop = true;
-        particles.Stop();  // No emite hasta que llamemos a Play()
+        particles.Stop();  
 
-        // 4) Ocultar UI al inicio
+        
         if (uiMessagePanel != null)
             uiMessagePanel.SetActive(false);
 
@@ -70,7 +56,7 @@ public class PressureEntityController : MonoBehaviour
         float overrideDuration = -1f)
     {
 
-        // Si me pasan mensajes nuevos, los uso
+        
         if (overrideMessages != null && overrideMessages.Length > 0)
         {
             pressureMessages = overrideMessages;
@@ -91,24 +77,6 @@ public class PressureEntityController : MonoBehaviour
         CancelInvoke(nameof(ShowMessage));
         Invoke(nameof(ShowMessage), delayBeforeText);
     }
-
-    /*
-        if (uiMessagePanel != null && pressureMessages.Length > 0)
-        {
-            string msg = pressureMessages[currentMessage % pressureMessages.Length];
-            uiMessagePanel.SetActive(true);
-            messageText.text = msg;
-            currentMessage++;
-
-            // Duración a usar
-            float duration = (overrideDuration > 0f) ? overrideDuration : displayDuration;
-            CancelInvoke(nameof(HideMessage));
-            Invoke(nameof(HideMessage), duration);
-
-            //CancelInvoke(nameof(HideMessage));
-            //Invoke(nameof(HideMessage), displayDuration);
-        }
-    }*/
 
     private void ShowMessage()
     {

@@ -40,7 +40,6 @@ public class MenusManager : MonoBehaviour
 
     private void Start()
     {
-        // Al arrancar, asegúrate de que levelUI, pauseUI, ... estén asignados
         if (levelUI == null || pauseUI == null || controlsUI == null || abilitiesUI == null)
         {
             Debug.LogError("[MenusManager] Te falta arrastrar alguna UI Root en el Inspector");
@@ -49,49 +48,6 @@ public class MenusManager : MonoBehaviour
         }
         CloseAll();
     }
-
-    /*
-    private void OnDestroy()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-
-        // Si volvemos al MainMenu, nos auto-destruimos
-        if (scene.name == "MainMenu")
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        // 1) Buscamos en la jerarquía los roots de UI
-        levelUI = GameObject.Find("LevelUI");
-        pauseUI = GameObject.Find("PauseUI");
-        controlsUI = GameObject.Find("ControlsUI");
-        abilitiesUI = GameObject.Find("AbilitiesUI");
-
-        // 2) Ocultamos todo y dejamos solo la UI de juego
-        levelUI?.SetActive(true);
-        pauseUI?.SetActive(false);
-        controlsUI?.SetActive(false);
-        abilitiesUI?.SetActive(false);
-        currentState = MenuState.None;
-        Time.timeScale = 1;
-
-        // 3) Volvemos a conectar los botones
-        //    (btnReturn, btnSaveAndExit, btnExitToMain están
-        //     arrastrados en el Inspector una sola vez)
-        btnReturn.onClick.RemoveAllListeners();
-        btnReturn.onClick.AddListener(CloseAll);
-
-        btnSaveAndExit.onClick.RemoveAllListeners();
-        btnSaveAndExit.onClick.AddListener(SaveAndExit);
-
-        btnExitToMain.onClick.RemoveAllListeners();
-        btnExitToMain.onClick.AddListener(ExitToMainMenu);
-    }*/
 
     private void Update()
     {
@@ -115,17 +71,15 @@ public class MenusManager : MonoBehaviour
 
     private void Open(MenuState target)
     {
-        // primero oculta todo
+        
         levelUI.SetActive(false);
         pauseUI.SetActive(false);
         controlsUI.SetActive(false);
         abilitiesUI.SetActive(false);
 
-        // Pausamos el juego
         Time.timeScale = 0;
         currentState = target;
 
-        // Mostramos SOLO el que toque
         switch (target)
         {
             case MenuState.Pause: if (pauseUI) pauseUI.SetActive(true); break;
@@ -136,7 +90,6 @@ public class MenusManager : MonoBehaviour
 
     private void CloseAll()
     {
-        // cierra todo y reanuda
         pauseUI.SetActive(false);
         controlsUI.SetActive(false);
         abilitiesUI.SetActive(false);
@@ -149,10 +102,8 @@ public class MenusManager : MonoBehaviour
         currentState = MenuState.None;
     }
 
-    // Este método lo enlazas con tu botón “Return to Game”
     public void ReturnToGame() => CloseAll();
 
-    // Guardar y salir, o salir al menú principal
     public void SaveAndExit()
     {
         Time.timeScale = 1;
