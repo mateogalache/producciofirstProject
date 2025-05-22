@@ -87,7 +87,7 @@ public class StarUIManager : MonoBehaviour
 
     public void AddStar(Vector3 worldPosition)
     {
-        Debug.Log("[StarUIManager] ? UI: Añadiendo estrella visual");
+        Debug.Log("[StarUIManager] UI: Añadiendo estrella visual");
 
         GameObject newStar = Instantiate(starUIPrefab, starContainer);
         RectTransform starRect = newStar.GetComponent<RectTransform>();
@@ -101,7 +101,7 @@ public class StarUIManager : MonoBehaviour
         // Añadido: si ya tenemos todas las estrellas, lanza la animación
         if (StarTracker.Instance.collectedStars >= StarTracker.Instance.maxStars && !animateStars)
         {
-            Debug.Log("[StarUIManager] ?? Todas las estrellas recogidas. Activando animación final.");
+            Debug.Log("[StarUIManager] Todas las estrellas recogidas. Activando animación final.");
             var grid = starContainer.GetComponent<GridLayoutGroup>();
             if (grid != null) Destroy(grid);
             animateStars = true;
