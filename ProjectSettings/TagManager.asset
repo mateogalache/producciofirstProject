@@ -18,6 +18,7 @@ TagManager:
   - Ascensor
   - PressurePanel
   - PressureText
+  - EndGame
   layers:
   - Default
   - TransparentFX
