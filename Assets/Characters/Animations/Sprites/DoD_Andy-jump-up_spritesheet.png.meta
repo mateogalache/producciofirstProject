@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e8c0939bc7cb8c840abfcb00e6155248
+guid: 6cf1e5599ecd678489df199b31e50773
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -34,7 +34,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 23
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -110,85 +110,148 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: idleR-spreadsheet_0
+      name: DoD_Andy-jump-up_spritesheet_0
       rect:
         serializedVersion: 2
-        x: 17
-        y: 6
-        width: 139
-        height: 354
+        x: 0
+        y: 0
+        width: 347
+        height: 399
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a0483c358c5e2d645840987ede65cd97
-      internalID: -1248537354
+      spriteID: d5baad651654ab149a1ba179fc263b06
+      internalID: -1355501102
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: idleR-spreadsheet_1
+      name: DoD_Andy-jump-up_spritesheet_1
       rect:
         serializedVersion: 2
-        x: 167
-        y: 6
-        width: 137
-        height: 353
+        x: 347
+        y: 0
+        width: 347
+        height: 399
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0b328a989988c8b49aa6224d38b78662
-      internalID: 277850319
+      spriteID: cdd5dc246fbfdd944b47ccf5ae10f3de
+      internalID: 1489685892
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: idleR-spreadsheet_2
+      name: DoD_Andy-jump-up_spritesheet_2
       rect:
         serializedVersion: 2
-        x: 304
-        y: 7
-        width: 137
-        height: 353
+        x: 694
+        y: 0
+        width: 347
+        height: 399
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 10293758d0685004697f8ca749a8e94a
-      internalID: 350220426
+      spriteID: 33b1d1bee85306040885a06c4068f16a
+      internalID: -220580987
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: idleR-spreadsheet_4
+      name: DoD_Andy-jump-up_spritesheet_3
       rect:
         serializedVersion: 2
-        x: 446
-        y: 6
-        width: 141
-        height: 354
+        x: 1041
+        y: 0
+        width: 347
+        height: 399
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 06a9447d9ecb07b4e9d50c29e20beb8a
-      internalID: -454733887
+      spriteID: 2648a2549b2be464682e17a9fcac5252
+      internalID: 1716840098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DoD_Andy-jump-up_spritesheet_4
+      rect:
+        serializedVersion: 2
+        x: 1388
+        y: 0
+        width: 347
+        height: 399
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bda9fba530251a0458b65829988ddc4b
+      internalID: 533697884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DoD_Andy-jump-up_spritesheet_5
+      rect:
+        serializedVersion: 2
+        x: 1735
+        y: 0
+        width: 347
+        height: 399
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a02e518b13620bf4f841a0f77bacac95
+      internalID: 901147535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DoD_Andy-jump-up_spritesheet_6
+      rect:
+        serializedVersion: 2
+        x: 2082
+        y: 0
+        width: 347
+        height: 399
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 89b27b6ac03e2de4287277f326018586
+      internalID: -1646497780
       vertices: []
       indices: 
       edges: []
@@ -204,11 +267,13 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      idleR-spreadsheet_0: -1248537354
-      idleR-spreadsheet_1: 277850319
-      idleR-spreadsheet_2: 350220426
-      idleR-spreadsheet_3: -1790666649
-      idleR-spreadsheet_4: -454733887
+      DoD_Andy-jump-up_spritesheet_0: -1355501102
+      DoD_Andy-jump-up_spritesheet_1: 1489685892
+      DoD_Andy-jump-up_spritesheet_2: -220580987
+      DoD_Andy-jump-up_spritesheet_3: 1716840098
+      DoD_Andy-jump-up_spritesheet_4: 533697884
+      DoD_Andy-jump-up_spritesheet_5: 901147535
+      DoD_Andy-jump-up_spritesheet_6: -1646497780
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
