@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(PlayerAudio))] // Asegúrate de tener un script PlayerAudio (o elimínalo si no lo usas)
+[RequireComponent(typeof(PlayerAudio))] // Asegï¿½rate de tener un script PlayerAudio (o elimï¿½nalo si no lo usas)
 public class PlayerMovementLvl2 : MonoBehaviour
 {
     #region Movement Settings
@@ -19,7 +19,7 @@ public class PlayerMovementLvl2 : MonoBehaviour
 
     #region Jump & Buffer Settings
     [Header("Jump Settings")]
-    [SerializeField] private float coyoteTime = 0.2f;       // Permite saltar poco después de salir del suelo
+    [SerializeField] private float coyoteTime = 0.2f;       // Permite saltar poco despuï¿½s de salir del suelo
     [SerializeField] private float jumpBufferTime = 0.2f;   // Buffer para el salto antes de aterrizar
     #endregion
 
@@ -31,14 +31,14 @@ public class PlayerMovementLvl2 : MonoBehaviour
     #region Drag Settings
     [Header("Drag Settings")]
     [SerializeField] private Transform grabPoint;         // Punto de agarre del jugador
-    [SerializeField] private float grabRadius = 1f;         // Radio de detección para objetos movibles
+    [SerializeField] private float grabRadius = 1f;         // Radio de detecciï¿½n para objetos movibles
     [SerializeField] private LayerMask draggableLayer;      // Capa asignada a objetos movibles
     #endregion
 
     #region Glide Settings
     [Header("Glide Settings")]
     [SerializeField] private float glideGravityScale = 0.5f; // Factor para reducir la gravedad al planear
-    [SerializeField] private float maxGlideFallSpeed = -2f;  // Velocidad máxima de caída cuando se planea
+    [SerializeField] private float maxGlideFallSpeed = -2f;  // Velocidad mï¿½xima de caï¿½da cuando se planea
     [SerializeField] private float glideSpeedMultiplier = 1.5f; // Multiplicador para aumentar la velocidad horizontal durante el planeo
     private bool isGliding = false;
     #endregion
@@ -46,7 +46,7 @@ public class PlayerMovementLvl2 : MonoBehaviour
     #region Wall & Wall Jump Settings
     [Header("Wall Settings")]
     [SerializeField] private float wallCheckDistance = 0.5f; // Distancia desde el jugador para detectar la pared
-    [SerializeField] private float wallCheckRadius = 0.2f;   // Radio de detección de la pared
+    [SerializeField] private float wallCheckRadius = 0.2f;   // Radio de detecciï¿½n de la pared
     [SerializeField] private LayerMask wallLayer;            // Capa asignada a las paredes
 
     [Header("Wall Jump Settings")]
@@ -56,7 +56,7 @@ public class PlayerMovementLvl2 : MonoBehaviour
     // Componentes y variables internas
     private Rigidbody2D rb;
     private PlayerAudio playerAudio;
-    private Animator animator; // Opcional – si usas animaciones
+    private Animator animator; // Opcional ï¿½ si usas animaciones
 
     private float horizontalInput;
     private float coyoteTimer;
@@ -118,7 +118,7 @@ public class PlayerMovementLvl2 : MonoBehaviour
     }
 
     /// <summary>
-    /// Actualiza el temporizador "coyote" para permitir saltos poco después de salir del suelo.
+    /// Actualiza el temporizador "coyote" para permitir saltos poco despuï¿½s de salir del suelo.
     /// </summary>
     private void UpdateCoyoteTimer()
     {
@@ -135,7 +135,7 @@ public class PlayerMovementLvl2 : MonoBehaviour
 
     /// <summary>
     /// Verifica si hay un salto en buffer y si se cumplen las condiciones para saltar.
-    /// Se incluye el wall jump si el jugador está en el aire y toca una pared.
+    /// Se incluye el wall jump si el jugador estï¿½ en el aire y toca una pared.
     /// </summary>
     private void HandleJumpBuffer()
     {
@@ -152,17 +152,17 @@ public class PlayerMovementLvl2 : MonoBehaviour
     }
 
     /// <summary>
-    /// Ejecuta el salto. Si el jugador está en el aire y tocando una pared, se realiza un wall jump.
+    /// Ejecuta el salto. Si el jugador estï¿½ en el aire y tocando una pared, se realiza un wall jump.
     /// </summary>
     private void Jump()
     {
-        // Si no está en el suelo y está tocando una pared, ejecuta el wall jump
+        // Si no estï¿½ en el suelo y estï¿½ tocando una pared, ejecuta el wall jump
         if (!IsGrounded() && IsTouchingWall())
         {
             int wallDir = WallDirection();
-            // Aplica la fuerza del wall jump en dirección contraria a la pared
+            // Aplica la fuerza del wall jump en direcciï¿½n contraria a la pared
             rb.velocity = new Vector2(-wallDir * wallJumpForce.x, wallJumpForce.y);
-            // Opcional: invierte la dirección del sprite para reflejar el salto
+            // Opcional: invierte la direcciï¿½n del sprite para reflejar el salto
             isFacingRight = (wallDir < 0);
         }
         else
@@ -179,7 +179,7 @@ public class PlayerMovementLvl2 : MonoBehaviour
     }
 
     /// <summary>
-    /// Maneja el movimiento horizontal, aplicando un multiplicador extra si se está planeando.
+    /// Maneja el movimiento horizontal, aplicando un multiplicador extra si se estï¿½ planeando.
     /// </summary>
     private void Move()
     {
@@ -195,7 +195,7 @@ public class PlayerMovementLvl2 : MonoBehaviour
     }
 
     /// <summary>
-    /// Aplica la gravedad personalizada y ajusta la física durante el planeo.
+    /// Aplica la gravedad personalizada y ajusta la fï¿½sica durante el planeo.
     /// </summary>
     private void ApplyCustomGravity()
     {
@@ -221,7 +221,7 @@ public class PlayerMovementLvl2 : MonoBehaviour
     }
 
     /// <summary>
-    /// Comprueba si el jugador está en el suelo.
+    /// Comprueba si el jugador estï¿½ en el suelo.
     /// </summary>
     private bool IsGrounded()
     {
@@ -229,7 +229,7 @@ public class PlayerMovementLvl2 : MonoBehaviour
     }
 
     /// <summary>
-    /// Invierte la dirección del sprite del jugador según el movimiento.
+    /// Invierte la direcciï¿½n del sprite del jugador segï¿½n el movimiento.
     /// </summary>
     private void HandleFlip()
     {
@@ -243,22 +243,26 @@ public class PlayerMovementLvl2 : MonoBehaviour
     }
 
     /// <summary>
-    /// Actualiza los parámetros del Animator (si se utiliza) para reflejar el estado actual.
+    /// Actualiza los parï¿½metros del Animator (si se utiliza) para reflejar el estado actual.
     /// </summary>
     private void UpdateAnimations()
     {
+        Debug.Log(rb.velocity.y);
         if (animator != null)
         {
             animator.SetFloat("Speed", Mathf.Abs(horizontalInput));
             animator.SetBool("IsGrounded", IsGrounded());
             animator.SetFloat("VerticalVelocity", rb.velocity.y);
+            animator.SetFloat("HorizontalVelocity", rb.velocity.x);
             animator.SetBool("IsCarrying", grabbedObject != null);
             animator.SetBool("IsGliding", isGliding);
+            animator.SetBool("IsDashing", false); // Cambia esto si tienes un dash
         }
     }
 
+    
     /// <summary>
-    /// Controla la activación del planeo: se activa si el jugador está en el aire, cayendo y mantiene pulsado salto.
+    /// Controla la activaciï¿½n del planeo: se activa si el jugador estï¿½ en el aire, cayendo y mantiene pulsado salto.
     /// </summary>
     private void HandleGlideInput()
     {
@@ -275,7 +279,7 @@ public class PlayerMovementLvl2 : MonoBehaviour
 
     #region Wall Jump Helpers
     /// <summary>
-    /// Detecta si el jugador está tocando una pared a la izquierda o a la derecha.
+    /// Detecta si el jugador estï¿½ tocando una pared a la izquierda o a la derecha.
     /// </summary>
     private bool IsTouchingWall()
     {
@@ -286,7 +290,7 @@ public class PlayerMovementLvl2 : MonoBehaviour
     }
 
     /// <summary>
-    /// Determina en qué dirección está la pared: -1 si está a la izquierda, 1 si a la derecha.
+    /// Determina en quï¿½ direcciï¿½n estï¿½ la pared: -1 si estï¿½ a la izquierda, 1 si a la derecha.
     /// </summary>
     private int WallDirection()
     {
@@ -322,7 +326,7 @@ public class PlayerMovementLvl2 : MonoBehaviour
     }
 
     /// <summary>
-    /// Intenta agarrar un objeto dentro del área definida.
+    /// Intenta agarrar un objeto dentro del ï¿½rea definida.
     /// </summary>
     private void TryGrab()
     {
@@ -381,7 +385,7 @@ public class PlayerMovementLvl2 : MonoBehaviour
 
     #region Gizmos
     /// <summary>
-    /// Dibuja gizmos para visualizar las áreas de detección del suelo, paredes y agarre.
+    /// Dibuja gizmos para visualizar las ï¿½reas de detecciï¿½n del suelo, paredes y agarre.
     /// </summary>
     void OnDrawGizmosSelected()
     {
@@ -390,7 +394,7 @@ public class PlayerMovementLvl2 : MonoBehaviour
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
-        // Dibuja los círculos para la detección de pared (izquierda y derecha)
+        // Dibuja los cï¿½rculos para la detecciï¿½n de pared (izquierda y derecha)
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position + Vector3.left * wallCheckDistance, wallCheckRadius);
         Gizmos.DrawWireSphere(transform.position + Vector3.right * wallCheckDistance, wallCheckRadius);

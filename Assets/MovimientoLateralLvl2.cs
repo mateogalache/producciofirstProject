@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections; // Añade esta línea para usar IEnumerator
+using System.Collections; // Necesario para usar IEnumerator
 
 public class MovimientoLateralLvl2 : MonoBehaviour
 {
@@ -11,17 +11,30 @@ public class MovimientoLateralLvl2 : MonoBehaviour
     private float tiempoUltimoCambio;
     private bool puedeCambiarDireccion = true;
 
+    // Límites de posición en X donde cambia de dirección automáticamente
+    public float limiteDerecho = 875.1f;
+    public float limiteIzquierdo = 592.8f;
+
     void Start()
     {
-        direccion = Random.Range(0, 2) * 2 - 1;
+        direccion = Random.Range(0, 2) * 2 - 1; // Random -1 o 1
         velocidad = Random.Range(velocidadMinima, velocidadMaxima);
         ConfigurarProximoCambio();
     }
 
     void Update()
     {
+        // Movimiento lateral
         transform.position += Vector3.right * direccion * velocidad * Time.deltaTime;
 
+        // Cambio automático si llega a los extremos definidos
+        if ((transform.position.x >= limiteDerecho && direccion > 0) ||
+            (transform.position.x <= limiteIzquierdo && direccion < 0))
+        {
+            CambiarDireccion();
+        }
+
+        // Cambio por tiempo
         if (Time.time - tiempoUltimoCambio >= tiempoParaCambioDireccion)
         {
             CambiarDireccion();
@@ -39,13 +52,13 @@ public class MovimientoLateralLvl2 : MonoBehaviour
     IEnumerator CambiarDireccionConDelay()
     {
         puedeCambiarDireccion = false;
-        
-        // Cambio inmediato de dirección
+
+        // Cambio inmediato de dirección al detectar colisión
         direccion *= -1;
         velocidad = Random.Range(velocidadMinima, velocidadMaxima);
         ConfigurarProximoCambio();
-        
-        // Pequeño delay para evitar múltiples triggers
+
+        // Pequeño delay para evitar múltiples cambios rápidos
         yield return new WaitForSeconds(0.2f);
         puedeCambiarDireccion = true;
     }

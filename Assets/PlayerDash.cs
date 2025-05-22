@@ -4,19 +4,19 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerDash : MonoBehaviour
 {
-    [Header("Configuración Básica")]
+    [Header("Configuraciï¿½n Bï¿½sica")]
     [SerializeField] private float dashSpeed = 25f;
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private float dashCooldown = 1f;
     [SerializeField] private KeyCode dashKey = KeyCode.LeftControl;
     [SerializeField] private LayerMask dashObstacleLayers;
 
-    [Header("Límites de Usos")]
+    [Header("Lï¿½mites de Usos")]
     [SerializeField] private int maxDashUses = 5;
     [SerializeField] private string dashRechargeTag = "dashObject";
     [SerializeField] private int rechargeAmount = 1;
 
-    [Header("Dash Aéreo")]
+    [Header("Dash Aï¿½reo")]
     [SerializeField] private bool allowAirDash = true;
     [SerializeField] private int maxAirDashes = 1;
 
@@ -42,17 +42,19 @@ public class PlayerDash : MonoBehaviour
     private int currentDashUses;
     private bool dashBlocked;
 
-    // Propiedades públicas
+    // Propiedades pï¿½blicas
     public int CurrentDashUses => currentDashUses;
     public bool IsDashing => isDashing;
     public bool DashBlocked => dashBlocked;
+
+    private Animator animator;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         movement = GetComponent<PlayerMovement>();
         playerCollider = GetComponent<Collider2D>();
-
+    animator = GetComponent<Animator>();
         InitializeDashSystem();
     }
 
@@ -70,10 +72,16 @@ public class PlayerDash : MonoBehaviour
 
     void Update()
     {
+        UpdateAnimations();
         if (Input.GetKeyDown(dashKey))
         {
             TryDash();
         }
+    }
+
+    private void UpdateAnimations()
+    {
+        animator.SetBool("IsDashing", isDashing);
     }
 
     void FixedUpdate()
@@ -143,7 +151,7 @@ public class PlayerDash : MonoBehaviour
     {
         rb.velocity = dashDirection * dashSpeed;
 
-        // Opcional: Detección de choque durante dash
+        // Opcional: Detecciï¿½n de choque durante dash
         if (Physics2D.Raycast(transform.position, dashDirection, 0.5f, dashObstacleLayers))
         {
             EndDash();

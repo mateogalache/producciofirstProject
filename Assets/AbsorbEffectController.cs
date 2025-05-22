@@ -1,9 +1,12 @@
 using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(ParticleSystem))]
 public class AbsorbEffectController : MonoBehaviour
 {
     private ParticleSystem ps;
+    private AudioSource audioSource;
     private bool hasExploded = false;
 
     [Header("Transición")]
@@ -11,23 +14,53 @@ public class AbsorbEffectController : MonoBehaviour
     public float delayBeforeExplosion = 0.5f;
     public float delayBeforeSceneChange = 1.5f;
 
+    [Header("Sonidos")]
+    public AudioClip normalSound;
+    public AudioClip explosionSound;
+
+    void Start()
+    {
+        ps = GetComponent<ParticleSystem>();
+        audioSource = GetComponent<AudioSource>();
+
+        // Configuración opcional del audio
+        audioSource.playOnAwake = false;
+        audioSource.loop = false;
+        audioSource.spatialBlend = 0f; // 0 = 2D, 1 = 3D
+    }
+
     public void TriggerAbsorption()
     {
         if (!hasExploded)
         {
             Debug.Log("TriggerAbsorption llamado");
+
+            // Reproducir sonido normal
+            if (audioSource && normalSound)
+            {
+                audioSource.clip = normalSound;
+                audioSource.Play();
+            }
+
             StartCoroutine(AbsorptionSequence());
         }
     }
 
     IEnumerator AbsorptionSequence()
     {
-        ps = GetComponent<ParticleSystem>();
         hasExploded = true;
 
         // Detener cualquier emisión actual
         ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         yield return new WaitForSeconds(delayBeforeExplosion);
+
+        // Reproducir sonido de explosión
+        if (audioSource && explosionSound)
+        {
+            audioSource.Stop(); // Detiene el sonido anterior
+            audioSource.clip = explosionSound;
+            audioSource.Play();
+        }
 
         // Configurar nueva explosión
         var main = ps.main;
