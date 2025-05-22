@@ -6,6 +6,9 @@ public class GameManagerLvl2 : MonoBehaviour
 {
     public static GameManagerLvl2 Instance { get; private set; }
 
+    [SerializeField] private Vector3 initialSpawnPosition = new Vector3(-1.920908f, -14.60353f, -1.869639f);
+
+
     private Vector3 currentCheckpoint = Vector3.zero;
     private bool hasProgress;
     private string currentLevel;
@@ -33,16 +36,19 @@ public class GameManagerLvl2 : MonoBehaviour
     {
         currentLevel = scene.name;
 
-        if (scene.name == "Level2") // Cambia esto por el nombre exacto de tu escena
+        if (scene.name == "Level2")
         {
             var player = GameObject.FindGameObjectWithTag("Player");
             if (player == null) return;
 
+            // Si no hay progreso, colocamos al jugador en la posición inicial
             if (!hasProgress)
             {
-                currentCheckpoint = player.transform.position;
+                currentCheckpoint = initialSpawnPosition;
                 hasProgress = true;
-                Debug.Log("[GameManagerLvl2] Checkpoint inicial en: " + currentCheckpoint);
+                player.transform.position = currentCheckpoint;
+
+                Debug.Log("[GameManagerLvl2] Spawn inicial en: " + currentCheckpoint);
             }
             else
             {
@@ -51,6 +57,7 @@ public class GameManagerLvl2 : MonoBehaviour
             }
         }
     }
+
 
     public void UpdateCheckpoint(Vector3 newCheckpoint)
     {

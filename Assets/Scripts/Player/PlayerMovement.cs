@@ -72,7 +72,7 @@ public class PlayerMovement : MonoBehaviour
         HandleGrabInput();
         HandleFlip();
         UpdateAnimations();
-        HandleGlideInput();
+        //HandleGlideInput();
     }
 
     void FixedUpdate()
@@ -216,7 +216,7 @@ public class PlayerMovement : MonoBehaviour
     #endregion
 
     #region Special Abilities
-    private void HandleGlideInput()
+    /*private void HandleGlideInput()
     {
         if (!IsGrounded() && rb.velocity.y < 0 && Input.GetButton("Jump"))
         {
@@ -226,7 +226,7 @@ public class PlayerMovement : MonoBehaviour
         {
             isGliding = false;
         }
-    }
+    }*/
 
     public void SetMovementControl(bool enabled)
     {

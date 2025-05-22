@@ -19,7 +19,7 @@ public class PieceController : PickUpController
         if (StarUIManager.Instance != null)
         {
             Vector3 starWorldPosition = transform.position;
-            StarUIManager.Instance.AddStar(starWorldPosition);
+            //StarUIManager.Instance.AddStar(starWorldPosition);
         }
         else
         {
