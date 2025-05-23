@@ -13,6 +13,7 @@ public class SceneTransitionManager : MonoBehaviour
 
     void Awake()
     {
+        /*
         // Singleton pattern
         if (Instance == null)
         {
@@ -22,7 +23,27 @@ public class SceneTransitionManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }*/
+
+        // Verifica si ya existe uno
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
         }
+
+        Instance = this;
+
+        // Verifica si es root. Si no lo es, muestra advertencia y destruye.
+        if (transform.parent != null)
+        {
+            Debug.LogWarning("SceneTransitionManager debe estar en la raíz del Hierarchy.");
+            Destroy(gameObject);
+            return;
+        }
+
+        // Persistencia segura entre escenas
+        DontDestroyOnLoad(gameObject);
     }
 
     void Start()
@@ -30,6 +51,9 @@ public class SceneTransitionManager : MonoBehaviour
         // Empieza con fade in
         if (fadeImage != null)
         {
+
+            fadeImage.raycastTarget = false;
+
             Color c = fadeImage.color;
             c.a = 1f;
             fadeImage.color = c;
@@ -44,6 +68,7 @@ public class SceneTransitionManager : MonoBehaviour
     {
         if (fadeImage != null)
         {
+            fadeImage.raycastTarget = false;
             StartCoroutine(FadeFromBlack());
         }
     }
@@ -60,6 +85,8 @@ public class SceneTransitionManager : MonoBehaviour
             Debug.LogError("fadeImage no asignado en SceneTransitionManager.");
             yield break;
         }
+
+        fadeImage.raycastTarget = true;
 
         yield return new WaitForSeconds(delay);
 
@@ -85,5 +112,9 @@ public class SceneTransitionManager : MonoBehaviour
             fadeImage.color = new Color(0f, 0f, 0f, alpha);
             yield return null;
         }
+
+        // Asegura que no bloquee después del fade
+        if (fadeImage != null)
+            fadeImage.raycastTarget = false;
     }
 }
