@@ -38665,6 +38665,10 @@ PrefabInstance:
       value: LevelUI
       objectReference: {fileID: 0}
     - target: {fileID: 6796635203627809923, guid: 33c041972fdb7ad4da479c2d84868afe, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6796635203627809923, guid: 33c041972fdb7ad4da479c2d84868afe, type: 3}
       propertyPath: m_TagString
       value: LevelUI
       objectReference: {fileID: 0}
