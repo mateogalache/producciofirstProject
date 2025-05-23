@@ -163,7 +163,7 @@ public class PlayerMovementLvl2 : MonoBehaviour
             // Aplica la fuerza del wall jump en direcci�n contraria a la pared
             rb.velocity = new Vector2(-wallDir * wallJumpForce.x, wallJumpForce.y);
             // Opcional: invierte la direcci�n del sprite para reflejar el salto
-            isFacingRight = (wallDir < 0);
+            //isFacingRight = (wallDir < 0);
         }
         else
         {
