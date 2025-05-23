@@ -20361,6 +20361,10 @@ PrefabInstance:
       propertyPath: m_FlipX
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8453944626491807108, guid: 4453705426abb6341b363b3d10c3f2c2, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 9055696806068210794, guid: 4453705426abb6341b363b3d10c3f2c2, type: 3}
       propertyPath: m_Name
       value: pinxos peques (2)
@@ -34080,6 +34084,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 6.049
       objectReference: {fileID: 0}
+    - target: {fileID: 8453944626491807108, guid: 4453705426abb6341b363b3d10c3f2c2, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 9055696806068210794, guid: 4453705426abb6341b363b3d10c3f2c2, type: 3}
       propertyPath: m_Name
       value: pinxos peques (1)
@@ -45954,6 +45962,10 @@ PrefabInstance:
     - target: {fileID: 6525328417142070944, guid: 4453705426abb6341b363b3d10c3f2c2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8453944626491807108, guid: 4453705426abb6341b363b3d10c3f2c2, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 9055696806068210794, guid: 4453705426abb6341b363b3d10c3f2c2, type: 3}
       propertyPath: m_Name
