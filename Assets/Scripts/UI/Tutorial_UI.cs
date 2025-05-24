@@ -20,8 +20,8 @@ public class TutorialUI : MonoBehaviour
     private Vector2 posicionInicialEstrellas;
     private Vector2 posicionInicialRun;
 
-    private float velocidad = 2f;  // velocitat de moviment
-    private float amplitud = 10f;  // Ajusta què tant es mou de dalt a baix
+    private float velocidad = 2f; 
+    private float amplitud = 10f; 
 
     private RectTransform canvasRect;
 
@@ -33,19 +33,17 @@ public class TutorialUI : MonoBehaviour
             return;
         }
 
-        //Guardem posicio inical de cada panell
         posicionInicialTutorial = tutorialPanel.anchoredPosition;
         posicionInicialCogerObjetos = cogerObjetosPanel.anchoredPosition;
         posicionInicialEstrellas = estrellasPanel.anchoredPosition;
         posicionInicialRun = runPanel.anchoredPosition;
 
-        tutorialPanel.gameObject.SetActive(true); // mostra tutorial al iniciar
+        tutorialPanel.gameObject.SetActive(true); 
         cogerObjetosPanel.gameObject.SetActive(true);
         estrellasPanel.gameObject.SetActive(true);
         runPanel.gameObject.SetActive(true);
         checkpointPanel.SetActive(false);
 
-        //obtenim referencia al Canvas
         canvasRect = checkpointPanel.GetComponentInParent<Canvas>().GetComponent<RectTransform>();
 
     }
@@ -54,14 +52,6 @@ public class TutorialUI : MonoBehaviour
     {
 
         if (tutorialPanel == null || cogerObjetosPanel == null || estrellasPanel == null || runPanel == null) return;
-
-        //float moviment = Mathf.Sin(Time.time * velocidad) * amplitud;
-
-        //Movem panels
-        //tutorialPanel.anchoredPosition = new Vector2(posicionInicialTutorial.x, posicionInicialTutorial.y + moviment);
-        //cogerObjetosPanel.anchoredPosition = new Vector2(posicionInicialCogerObjetos.x, posicionInicialCogerObjetos.y + moviment);
-        //estrellasPanel.anchoredPosition = new Vector2(posicionInicialEstrellas.x, posicionInicialEstrellas.y + moviment);
-        //runPanel.anchoredPosition = new Vector2(posicionInicialRun.x, posicionInicialRun.y + moviment);
 
 
         if (Input.GetKeyDown(KeyCode.Space)) 
@@ -100,13 +90,11 @@ public class TutorialUI : MonoBehaviour
         {
             checkpointText.text = message;
 
-            //Mou el panell a la posicio correcta
             UpdateCheckpointPanelPosition();
 
             checkpointPanel.SetActive(true);
             Debug.Log("Mensaje mostrado en TutorialUI: " + message);
 
-            //Crido a HideChekpointPanel() despres de 3 seg
             Invoke(nameof(HideCheckpointPanel), 3f);
 
         } else

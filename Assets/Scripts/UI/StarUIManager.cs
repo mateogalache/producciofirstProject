@@ -98,7 +98,7 @@ public class StarUIManager : MonoBehaviour
         if (collectSound != null)
             audioSource.PlayOneShot(collectSound, 0.2f);
 
-        // Añadido: si ya tenemos todas las estrellas, lanza la animación
+      
         if (StarTracker.Instance.collectedStars >= StarTracker.Instance.maxStars && !animateStars)
         {
             Debug.Log("[StarUIManager] Todas las estrellas recogidas. Activando animación final.");
@@ -171,7 +171,6 @@ public class StarUIManager : MonoBehaviour
 
     private IEnumerator FadeAndLoadScene(string sceneName)
     {
-        // Asegura que la imagen empiece con alpha 0 antes de hacer fade
         if (fadeImage != null)
         {
             Color startColor = fadeImage.color;
@@ -185,7 +184,7 @@ public class StarUIManager : MonoBehaviour
             float alpha = Mathf.Clamp01(t / fadeDuration);
             if (fadeImage != null)
             {
-                fadeImage.color = new Color(0f, 0f, 0f, alpha); // aseguramos color negro
+                fadeImage.color = new Color(0f, 0f, 0f, alpha); 
             }
             yield return null;
         }

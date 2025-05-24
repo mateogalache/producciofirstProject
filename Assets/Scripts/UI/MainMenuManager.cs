@@ -40,7 +40,6 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnExitClicked()
     {
-        // En build: cierra aplicación; en editor: para el Play
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
