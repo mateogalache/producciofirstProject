@@ -19,6 +19,7 @@ TagManager:
   - PressurePanel
   - PressureText
   - EndGame
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX
