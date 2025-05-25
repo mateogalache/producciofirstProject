@@ -9973,7 +9973,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 35
-  accelerationTime: 0.4
+  accelerationTime: 0.8
   decelerationTime: 0.2
   jumpForce: 25
   gravityScale: 6
@@ -9985,11 +9985,16 @@ MonoBehaviour:
   coyoteTime: 0.2
   jumpBufferTime: 0.2
   jumpCarryMultiplier: 0.8
-  grabPoint: {fileID: 8907311600826106825}
+  grabPointR: {fileID: 0}
+  grabPointL: {fileID: 0}
   grabRadius: 10
   draggableLayer:
     serializedVersion: 2
     m_Bits: 256
+  glideGravityScale: 0.5
+  maxGlideFallSpeed: -2
+  dashComponent: {fileID: 0}
+  body: {fileID: 0}
 --- !u!114 &1718925046049920213
 MonoBehaviour:
   m_ObjectHideFlags: 0
