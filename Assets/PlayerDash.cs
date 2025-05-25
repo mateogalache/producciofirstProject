@@ -60,6 +60,7 @@ public class PlayerDash : MonoBehaviour
 
     private void InitializeDashSystem()
     {
+        Debug.Log("Inicializando sistema de dash...");
         if (dashTrail != null)
         {
             dashTrail.emitting = false;
@@ -69,6 +70,9 @@ public class PlayerDash : MonoBehaviour
         currentDashUses = maxDashUses;
         dashBlocked = false;
     }
+
+
+
 
     void Update()
     {
@@ -234,6 +238,7 @@ public class PlayerDash : MonoBehaviour
 
     public void ResetDashSystem()
     {
+        Debug.Log("Reiniciando sistema de dash...");
         InitializeDashSystem();
     }
 }

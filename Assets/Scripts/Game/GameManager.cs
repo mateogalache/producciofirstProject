@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     private Vector3 currentCheckpoint = Vector3.zero;
     private bool hasProgress;
     private string lastLevelName;
+    private PlayerDash playerDash;
 
     private void Awake()
     {

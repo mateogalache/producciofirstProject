@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class MoverDerecha : MonoBehaviour
 {
-    [Header("Configuración de Velocidad")]
+    [Header("Configuraciï¿½n de Velocidad")]
     [SerializeField] private float velocidadInicial = 5f;
     [SerializeField] private float velocidadMaxima = 15f;
     [SerializeField] private float tiempoAceleracion = 10f;
     [SerializeField] private AnimationCurve curvaAceleracion;
 
-    [Header("Configuración de Checkpoint")]
+    [Header("Configuraciï¿½n de Checkpoint")]
     [SerializeField] private float distanciaInicial = 3f;
 
     private Transform playerTransform;
@@ -17,13 +17,14 @@ public class MoverDerecha : MonoBehaviour
     private float tiempoMovimiento;
     private float velocidadActual;
 
+
     void Start()
     {
         playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
         ultimoCheckpoint = playerTransform.position;
         velocidadActual = velocidadInicial;
 
-        // Configurar curva de aceleración por defecto si no está asignada
+        // Configurar curva de aceleraciï¿½n por defecto si no estï¿½ asignada
         if (curvaAceleracion.length == 0)
         {
             curvaAceleracion = AnimationCurve.Linear(0, 0, 1, 1);
@@ -56,7 +57,7 @@ public class MoverDerecha : MonoBehaviour
             if (playerTransform.position.x > transform.position.x + distanciaInicial * 0.5f)
             {
                 debeEsperarJugador = false;
-                // Reiniciamos el contador de aceleración al reaparecer
+                // Reiniciamos el contador de aceleraciï¿½n al reaparecer
                 tiempoMovimiento = 0f;
                 velocidadActual = velocidadInicial;
             }
@@ -80,16 +81,24 @@ public class MoverDerecha : MonoBehaviour
     }
 
     private void OnTriggerEnter2D(Collider2D other)
+{
+    if (other.CompareTag("Player"))
     {
-        if (other.CompareTag("Player"))
-        {
-            ManejarColisionJugador();
-        }
-        else if (other.CompareTag("Checkpoint"))
-        {
-            ActualizarCheckpoint(other.transform);
-        }
+        ManejarColisionJugador();
+
+        // (1) ObtÃ©n el PlayerDash del otro objeto, no de este
+        var dash = other.GetComponent<PlayerDash>();
+        if (dash != null)
+            dash.ResetDashSystem();
+        else
+            Debug.LogWarning("PlayerDash no encontrado en el Player.");
     }
+    else if (other.CompareTag("Checkpoint"))
+    {
+        ActualizarCheckpoint(other.transform);
+    }
+}
+
 
     private void ManejarColisionJugador()
     {

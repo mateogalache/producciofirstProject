@@ -256,7 +256,6 @@ public class PlayerMovementLvl2 : MonoBehaviour
             animator.SetFloat("HorizontalVelocity", rb.velocity.x);
             animator.SetBool("IsCarrying", grabbedObject != null);
             animator.SetBool("IsGliding", isGliding);
-            animator.SetBool("IsDashing", false); // Cambia esto si tienes un dash
         }
     }
 
